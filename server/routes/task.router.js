@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const pool = require('../modules/pool');
 
 // GET /api/task
 router.get('/', (req, res) => {
