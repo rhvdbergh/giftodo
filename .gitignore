@@ -15,3 +15,7 @@ web-build/
 
 # environment variables
 .env
+
+# react native environment variables
+# on local machine
+config.js

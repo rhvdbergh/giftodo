@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import LOCALHOST_IP from './config';
 
 export default function App() {
   // on page load:
   useEffect(() => {
-    fetch('http://localhost:5000/api/task')
+    fetch(`http://${LOCALHOST_IP}:5000/api/task`)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((err) => console.log('Error in fetch: ', err));
