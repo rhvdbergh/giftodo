@@ -1,22 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import LOCALHOST_IP from './config';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import TaskListView from './Components/TaskListView/TaskListView';
 
 export default function App() {
-  // on page load:
-  useEffect(() => {
-    fetch(`http://${LOCALHOST_IP}:5000/api/task`)
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log('Error in fetch: ', err));
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView>
+      <TaskListView />
+    </SafeAreaView>
   );
 }
 
