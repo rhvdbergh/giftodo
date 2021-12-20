@@ -8,7 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "server": "node server/server.js",
+    "server": "nodemon node server/server.js",
     "eject": "expo eject"
   },
   "dependencies": {
@@ -23,7 +23,8 @@
     "react-native-web": "0.17.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "nodemon": "^2.0.15"
   },
   "private": true
 }
