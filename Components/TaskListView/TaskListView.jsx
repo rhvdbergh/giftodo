@@ -39,6 +39,7 @@ function TaskListView() {
       keyExtractor={(task) => task.id}
       extraData={loaded}
       ListHeaderComponent={TaskListHeader}
+      stickyHeaderIndices={[0]}
     />
   );
 }

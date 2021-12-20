@@ -11,7 +11,9 @@ function TaskListHeader() {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#a8d4ad',
-    padding: 25,
+    padding: 30,
+    marginBottom: 40,
+    marginTop: 0,
     marginVertical: 8,
     marginHorizontal: 16,
     alignItems: 'center',
