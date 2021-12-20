@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
 import LOCALHOST_IP from '../../config';
+import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
 function TaskListView() {
   // local state for the tasklist
@@ -37,6 +38,7 @@ function TaskListView() {
       renderItem={renderTask}
       keyExtractor={(task) => task.id}
       extraData={loaded}
+      ListHeaderComponent={TaskListHeader}
     />
   );
 }
