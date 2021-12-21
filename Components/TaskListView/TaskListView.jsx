@@ -8,7 +8,7 @@ import TaskListHeader from '../TaskListHeader/TaskListHeader';
 function TaskListView() {
   // local state for the tasklist
   const [taskList, setTaskList] = useState([]);
-  const [loaded, setLoaded] = useState(0);
+  const [loaded, setLoaded] = useState(0); // forces the Flatlist to update
 
   // on page load, retrieve the taskList
   useEffect(() => {
@@ -42,7 +42,7 @@ function TaskListView() {
           <Button
             title="Delete"
             icon={{ name: 'trash-alt', type: 'font-awesome-5', color: 'white' }}
-            onPress={() => console.log('delete button clicked')}
+            onPress={() => handleDelete(item.id)}
             buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
           />
         }
@@ -53,6 +53,22 @@ function TaskListView() {
         </ListItem.Content>
       </ListItem.Swipeable>
     );
+  };
+
+  const handleDelete = (id) => {
+    // delete this specific id
+    fetch(`http://${LOCALHOST_IP}:5000/api/task/${id}`, {
+      method: 'DELETE',
+    }).catch((err) => console.log('error deleting:', err));
+
+    // refresh the list
+    fetch(`http://${LOCALHOST_IP}:5000/api/task`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTaskList(data);
+        setLoaded(loaded + 1);
+      })
+      .catch((err) => console.log('Error in fetch: ', err));
   };
 
   return (
