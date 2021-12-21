@@ -1,17 +1,27 @@
 import { useState } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { ThemeProvider, TabView, Tab } from 'react-native-elements';
+import { ThemeProvider, TabView, Tab, View, Text } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TaskListView from './Components/TaskListView/TaskListView';
 
 export default function App() {
   // local state for tab index
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(2);
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <TaskListView />
+        <TabView value={tabIndex} onChange={setTabIndex}>
+          <TabView.Item style={{ width: '100%' }}>
+            <TaskListView />
+          </TabView.Item>
+          <TabView.Item style={{ width: '100%' }}>
+            <TaskListView />
+          </TabView.Item>
+          <TabView.Item style={{ width: '100%' }}>
+            <TaskListView />
+          </TabView.Item>
+        </TabView>
         <Tab
           value={tabIndex}
           onChange={(event) => setTabIndex(event)}
