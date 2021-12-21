@@ -63,4 +63,46 @@ router.post('/', (req, res) => {
     });
 });
 
+// PUT /api/task/:id
+// updates a task
+router.put('/:id', (req, res) => {
+  // build the SQL query
+  const query = `
+    UPDATE "task"
+    SET 
+    name = $1,
+    description = $2, 
+    due_date = $3,
+    priority = $4,
+    gif_url = $5,
+    complete = $6
+    WHERE id = $7;
+  `;
+
+  // parameterize the inputs
+  const values = [
+    req.body.name,
+    req.body.description,
+    req.body.due_date,
+    req.body.priority,
+    req.body.gif_url,
+    req.body.complete,
+    req.params.id,
+  ];
+
+  // run the query
+  pool
+    .query(query, values)
+    .then((response) => {
+      res.sendStatus(204); // item was updated
+    })
+    .catch((err) => {
+      console.log(
+        'There was an error updating the task in the database: ',
+        err
+      );
+      res.sendStatus(500); // tell the client something's gone wrong
+    });
+});
+
 module.exports = router;
