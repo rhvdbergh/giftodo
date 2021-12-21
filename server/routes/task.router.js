@@ -108,6 +108,7 @@ router.put('/:id', (req, res) => {
 // DELETE /api/task/:id
 // deletes a specific task from the db
 router.delete('/:id', (req, res) => {
+  console.log('in DELETE /api/task/:id with id:', req.params.id);
   // build the SQL query
   const query = `
     DELETE FROM "task" 
