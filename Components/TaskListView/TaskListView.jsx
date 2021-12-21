@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
 import { Button, ListItem } from 'react-native-elements';
-import LOCALHOST_IP from '../../config';
+import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
 function TaskListView({ setEditTask, setTabIndex }) {

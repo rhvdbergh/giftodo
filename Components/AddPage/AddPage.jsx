@@ -15,7 +15,7 @@ import {
   Button,
 } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import LOCALHOST_IP from '../../config';
+import { LOCALHOST_IP, GIPHY_API } from '../../config';
 import axios from 'axios';
 
 // set up an empty task object to start with
@@ -24,7 +24,7 @@ const emptyTask = {
   description: null,
   priority: 5,
   due_date: null,
-  gif_url: 'https://source.unsplash.com/random',
+  gif_url: null,
 };
 
 function AddPage({ setTabIndex, setEditTask, editTask }) {
@@ -72,6 +72,19 @@ function AddPage({ setTabIndex, setEditTask, editTask }) {
         })
         .catch((err) => console.log('Error in adding post: ', err));
     }
+  };
+
+  const handleGenerateGif = () => {
+    task.name !== null &&
+      axios
+        .get(
+          `https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_API}&tag=${task.name}&rating=g`
+        )
+        .then((response) => {
+          const giphy_url = response.data.data.images.fixed_height.url;
+          setTask({ ...task, gif_url: giphy_url });
+          console.log(`giphy object`, giphy_url);
+        });
   };
 
   return (
@@ -135,6 +148,7 @@ function AddPage({ setTabIndex, setEditTask, editTask }) {
             marginHorizontal: 50,
             marginVertical: 10,
           }}
+          onPress={handleGenerateGif}
         />
         {task.gif_url && (
           <Image
