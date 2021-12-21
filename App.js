@@ -24,7 +24,7 @@ export default function App() {
         {tabIndex === 0 && <AccountView />}
         {tabIndex === 1 && <GifsView />}
         {tabIndex === 2 && <TaskListView />}
-        {tabIndex === 3 && <AddPage />}
+        {tabIndex === 3 && <AddPage setTabIndex={setTabIndex} />}
         <Tab
           value={tabIndex}
           onChange={(event) => setTabIndex(event)}

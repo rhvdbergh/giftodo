@@ -25,7 +25,7 @@ const emptyTask = {
   gif_url: 'https://source.unsplash.com/random',
 };
 
-function AddPage() {
+function AddPage({ setTabIndex }) {
   // local state to control input
   const [task, setTask] = useState(emptyTask);
   const [hasDueDate, setHasDueDate] = useState(false);
@@ -36,13 +36,14 @@ function AddPage() {
     <ScrollView style={styles.container}>
       <Text style={styles.text}>Task Name</Text>
       <TextInput
+        style={styles.input}
         placeholder="Enter Task Name"
         autoFocus
         onChangeText={(value) => setTask({ ...task, name: value })}
       />
       <Text style={styles.text}>Task Description</Text>
       <TextInput
-        style={{ height: 100 }}
+        style={{ ...styles.input, height: 100 }}
         placeholder="Enter Task Description"
         multiline
         onChangeText={(value) => setTask({ ...task, description: value })}
@@ -56,6 +57,7 @@ function AddPage() {
         step={1}
         allowTouchTrack
         trackStyle={{ backgroundColor: 'transparent' }}
+        thumbStyle={{ height: 20, width: 20 }}
         thumbTintColor={colors.primary}
         minimumTrackTintColor={colors.primary}
         maximumTrackTintColor={colors.grey4}
@@ -67,16 +69,18 @@ function AddPage() {
           checked={hasDueDate}
           onPress={() => setHasDueDate(!hasDueDate)}
         />
-        <DateTimePicker
-          value={task.due_date ?? new Date()}
-          disabled={!hasDueDate}
-          mode={'datetime'}
-          display="default"
-          onChange={(evt, date) => setTask({ ...task, due_date: date })}
-        />
       </View>
+      <DateTimePicker
+        value={task.due_date ?? new Date()}
+        minimumDate={new Date()}
+        disabled={!hasDueDate}
+        mode={'datetime'}
+        display="default"
+        onChange={(evt, date) => setTask({ ...task, due_date: date })}
+      />
       <View style={styles.gifContainer}>
         <Button
+          style={{ marginBottom: 20 }}
           title="Generate Gif"
           buttonStyle={{
             backgroundColor: colors.primary,
@@ -102,10 +106,11 @@ function AddPage() {
             borderRadius: 3,
           }}
           containerStyle={{
-            width: '30%',
+            width: '40%',
             marginHorizontal: 10,
             marginVertical: 10,
           }}
+          onPress={() => setTabIndex(2)}
         />
         <Button
           title="Add"
@@ -114,7 +119,7 @@ function AddPage() {
             borderRadius: 3,
           }}
           containerStyle={{
-            width: '30%',
+            width: '40%',
             marginHorizontal: 10,
             marginVertical: 10,
           }}
@@ -132,11 +137,14 @@ const styles = StyleSheet.create({
   dateContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: 40,
+    marginBottom: 10,
   },
   gifContainer: {
     display: 'flex',
     alignItems: 'center',
+    marginTop: 40,
   },
   gif: {
     width: '70%',
@@ -144,11 +152,27 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+    marginTop: 15,
+    marginLeft: 15,
+    fontWeight: 'bold',
+  },
+  input: {
+    margin: 15,
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    fontSize: 18,
+    backgroundColor: colors.grey5,
   },
   buttonbox: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 50,
+    marginBottom: 50,
+    marginLeft: 20,
+    marginRight: 20,
   },
 });
 
