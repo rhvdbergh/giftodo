@@ -105,4 +105,28 @@ router.put('/:id', (req, res) => {
     });
 });
 
+// DELETE /api/task/:id
+// deletes a specific task from the db
+router.delete('/:id', (req, res) => {
+  // build the SQL query
+  const query = `
+    DELETE FROM "task" 
+    WHERE id = $1;
+  `;
+
+  // run the query with parameterized input
+  pool
+    .query(query, [req.params.id])
+    .then((response) => {
+      res.sendStatus(204); // item was updated
+    })
+    .catch((err) => {
+      console.log(
+        'There was an error deleting the task from the database: ',
+        err
+      );
+      res.sendStatus(500); // tell the client something's gone wrong
+    });
+});
+
 module.exports = router;
