@@ -1,27 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { ThemeProvider, TabView, Tab, View, Text } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TaskListView from './Components/TaskListView/TaskListView';
+import GifsView from './Components/GifsView/GifsView';
+import AccountView from './Components/AccountView/AccountView';
 
 export default function App() {
   // local state for tab index
   const [tabIndex, setTabIndex] = useState(2);
 
+  useEffect(() => {
+    if (tabIndex === 0) {
+      console.log('reached 0');
+    }
+  }, [tabIndex]);
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <TabView value={tabIndex} onChange={setTabIndex}>
-          <TabView.Item style={{ width: '100%' }}>
-            <TaskListView />
-          </TabView.Item>
-          <TabView.Item style={{ width: '100%' }}>
-            <TaskListView />
-          </TabView.Item>
-          <TabView.Item style={{ width: '100%' }}>
-            <TaskListView />
-          </TabView.Item>
-        </TabView>
+        {tabIndex === 0 && <AccountView />}
+        {tabIndex === 1 && <GifsView />}
+        {tabIndex === 2 && <TaskListView />}
         <Tab
           value={tabIndex}
           onChange={(event) => setTabIndex(event)}
@@ -35,6 +35,7 @@ export default function App() {
             title="Account"
             titleStyle={{ fontSize: 12 }}
             icon={{ name: 'user', type: 'font-awesome-5', color: 'white' }}
+            onChange={() => console.log('hi')}
           />
           <Tab.Item
             title="Gifs"

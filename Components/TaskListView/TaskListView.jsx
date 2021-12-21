@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
+import { Button, ListItem } from 'react-native-elements';
 import LOCALHOST_IP from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
@@ -20,8 +21,6 @@ function TaskListView() {
       .catch((err) => console.log('Error in fetch: ', err));
   }, []);
 
-  console.log(`taskList`, taskList);
-
   const Task = ({ name }) => (
     <View style={styles.task}>
       <Text style={styles.text}>{name}</Text>
@@ -29,7 +28,21 @@ function TaskListView() {
   );
 
   const renderTask = ({ item }) => {
-    return <Task name={item.name} />;
+    return (
+      <ListItem.Swipeable
+        leftContent={
+          <Button
+            title="Edit"
+            icon={{ name: 'edit', type: 'font-awesome-5', color: 'white' }}
+          />
+        }
+      >
+        <ListItem.Content>
+          <ListItem.Title>{item.name}</ListItem.Title>
+          <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
+        </ListItem.Content>
+      </ListItem.Swipeable>
+    );
   };
 
   return (
