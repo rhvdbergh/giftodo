@@ -27,4 +27,40 @@ router.get('/', (req, res) => {
     });
 });
 
+// POST /api/task
+router.post('/', (req, res) => {
+  // when added, tasks are incomplete by default
+
+  // build a SQL query
+  const query = `
+    INSERT INTO "task" 
+    ("name", "description", "due_date", "priority", "gif_url")
+    VALUES
+    ($1, $2, $3, $4, $5);
+  `;
+
+  // parameterize the inputs
+  const values = [
+    req.body.name,
+    req.body.description,
+    req.body.due_date,
+    req.body.priority ?? 5, // add a default value of 5 if null
+    req.body.gif_url,
+  ];
+
+  // run the query
+  pool
+    .query(query, values)
+    .then((response) => {
+      res.sendStatus(201); // item was created
+    })
+    .catch((err) => {
+      console.log(
+        'There was an error creating the task in the database: ',
+        err
+      );
+      res.sendStatus(500); // tell the client something's gone wrong
+    });
+});
+
 module.exports = router;
