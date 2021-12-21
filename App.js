@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { ThemeProvider, TabView, Tab, View, Text } from 'react-native-elements';
+import {
+  ThemeProvider,
+  TabView,
+  Tab,
+  View,
+  Text,
+  colors,
+} from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TaskListView from './Components/TaskListView/TaskListView';
 import GifsView from './Components/GifsView/GifsView';
 import AccountView from './Components/AccountView/AccountView';
+import AddPage from './Components/AddPage/AddPage';
 
 export default function App() {
   // local state for tab index
   const [tabIndex, setTabIndex] = useState(2);
-
-  useEffect(() => {
-    if (tabIndex === 0) {
-      console.log('reached 0');
-    }
-  }, [tabIndex]);
 
   return (
     <SafeAreaProvider>
@@ -22,6 +24,7 @@ export default function App() {
         {tabIndex === 0 && <AccountView />}
         {tabIndex === 1 && <GifsView />}
         {tabIndex === 2 && <TaskListView />}
+        {tabIndex === 3 && <AddPage setTabIndex={setTabIndex} />}
         <Tab
           value={tabIndex}
           onChange={(event) => setTabIndex(event)}
@@ -32,7 +35,7 @@ export default function App() {
           variant="primary"
         >
           <Tab.Item
-            title="Overdue"
+            title="Due"
             titleStyle={{ fontSize: 12 }}
             icon={{ name: 'clock', type: 'font-awesome-5', color: 'white' }}
             onChange={() => console.log('hi')}
@@ -55,6 +58,15 @@ export default function App() {
               color: 'white',
             }}
           />
+          <Tab.Item
+            title="Add"
+            titleStyle={{ fontSize: 12 }}
+            icon={{
+              name: 'plus',
+              type: 'font-awesome-5',
+              color: 'white',
+            }}
+          />
         </Tab>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -64,6 +76,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e8ec67',
+    backgroundColor: colors.primary,
   },
 });
