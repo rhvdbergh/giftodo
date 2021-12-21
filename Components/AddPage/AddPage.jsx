@@ -37,8 +37,6 @@ function AddPage({ setTabIndex, setEditTask, editTask }) {
     editTask.id && editTask.due_date !== null ? true : false
   );
 
-  console.log(`task`, task);
-
   // checks to see if this task can be submitted
   const validTask = () => {
     return task.name !== null && task.name !== '';
@@ -94,7 +92,6 @@ function AddPage({ setTabIndex, setEditTask, editTask }) {
         style={styles.input}
         placeholder="Enter Task Name"
         value={task.name}
-        autoFocus
         onChangeText={(value) => setTask({ ...task, name: value })}
       />
       <Text style={styles.text}>Task Description</Text>
@@ -173,7 +170,7 @@ function AddPage({ setTabIndex, setEditTask, editTask }) {
           onPress={() => setTabIndex(2)}
         />
         <Button
-          title={editTask.id ? 'Edit' : 'Add'}
+          title={editTask.id ? 'Save' : 'Add'}
           buttonStyle={{
             backgroundColor: colors.primary,
             borderRadius: 3,
