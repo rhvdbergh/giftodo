@@ -34,6 +34,16 @@ function TaskListView() {
           <Button
             title="Edit"
             icon={{ name: 'edit', type: 'font-awesome-5', color: 'white' }}
+            onPress={() => console.log('edit button clicked')}
+            buttonStyle={{ minHeight: '100%' }}
+          />
+        }
+        rightContent={
+          <Button
+            title="Delete"
+            icon={{ name: 'trash-alt', type: 'font-awesome-5', color: 'white' }}
+            onPress={() => console.log('delete button clicked')}
+            buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
           />
         }
       >
@@ -69,6 +79,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 24,
+  },
+  button: {
+    flex: 1,
   },
 });
 
