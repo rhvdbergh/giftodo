@@ -27,13 +27,15 @@ const emptyTask = {
   gif_url: 'https://source.unsplash.com/random',
 };
 
-function AddPage({ setTabIndex }) {
+function AddPage({ setTabIndex, setEditTask, editTask }) {
   // local state to control input
-  const [task, setTask] = useState(emptyTask);
+  const [task, setTask] = useState(editTask.id ? editTask : emptyTask);
   // the slider doesn't update correctly,
   // so the priority needs to be handled separately
-  const [priority, setPriority] = useState(5);
-  const [hasDueDate, setHasDueDate] = useState(false);
+  const [priority, setPriority] = useState(editTask.id ? editTask.priority : 5);
+  const [hasDueDate, setHasDueDate] = useState(
+    editTask.id && editTask.due_date !== null ? true : false
+  );
 
   console.log(`task`, task);
 
@@ -43,17 +45,28 @@ function AddPage({ setTabIndex }) {
   };
 
   const handleAdd = () => {
-    if (validTask()) {
-      axios
-        .post(`http://${LOCALHOST_IP}:5000/api/task`, {
+    if (validTask) {
+      // the method below serves for both PUT and POST
+      // depending on whether an editTask exists
+      // build the url
+      let url;
+      editTask.id
+        ? (url = `http://${LOCALHOST_IP}:5000/api/task/${editTask.id}`)
+        : (url = `http://${LOCALHOST_IP}:5000/api/task`);
+      axios({
+        method: editTask.id ? 'PUT' : 'POST',
+        url: url,
+        data: {
           ...task,
           priority: priority,
           due_date: hasDueDate ? task.due_date : null,
-        })
+        },
+      })
         .then(() => {
           // clear out the local state
           setTask(emptyTask);
           setPriority(5);
+          setEditTask({});
           // move the user back to the tasks screen
           setTabIndex(2);
         })
@@ -67,12 +80,14 @@ function AddPage({ setTabIndex }) {
       <TextInput
         style={styles.input}
         placeholder="Enter Task Name"
+        value={task.name}
         autoFocus
         onChangeText={(value) => setTask({ ...task, name: value })}
       />
       <Text style={styles.text}>Task Description</Text>
       <TextInput
         style={{ ...styles.input, height: 100 }}
+        value={task.description}
         placeholder="Enter Task Description"
         multiline
         onChangeText={(value) => setTask({ ...task, description: value })}
@@ -100,7 +115,7 @@ function AddPage({ setTabIndex }) {
         />
       </View>
       <DateTimePicker
-        value={task.due_date ?? new Date()}
+        value={task.due_date ? new Date(task.due_date) : new Date()}
         minimumDate={new Date()}
         disabled={!hasDueDate}
         mode={'datetime'}
@@ -121,11 +136,13 @@ function AddPage({ setTabIndex }) {
             marginVertical: 10,
           }}
         />
-        <Image
-          source={{ uri: task.gif_url }}
-          containerStyle={styles.gif}
-          PlaceholderContent={<ActivityIndicator />}
-        />
+        {task.gif_url && (
+          <Image
+            source={{ uri: task.gif_url }}
+            containerStyle={styles.gif}
+            PlaceholderContent={<ActivityIndicator />}
+          />
+        )}
       </View>
       <View style={styles.buttonbox}>
         <Button
@@ -142,7 +159,7 @@ function AddPage({ setTabIndex }) {
           onPress={() => setTabIndex(2)}
         />
         <Button
-          title="Add"
+          title={editTask.id ? 'Edit' : 'Add'}
           buttonStyle={{
             backgroundColor: colors.primary,
             borderRadius: 3,

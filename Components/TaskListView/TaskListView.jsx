@@ -5,7 +5,7 @@ import { Button, ListItem } from 'react-native-elements';
 import LOCALHOST_IP from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
-function TaskListView() {
+function TaskListView({ setEditTask, setTabIndex }) {
   // local state for the tasklist
   const [taskList, setTaskList] = useState([]);
   const [loaded, setLoaded] = useState(0); // forces the Flatlist to update
@@ -34,7 +34,11 @@ function TaskListView() {
           <Button
             title="Edit"
             icon={{ name: 'edit', type: 'font-awesome-5', color: 'white' }}
-            onPress={() => console.log('edit button clicked')}
+            onPress={() => {
+              // set the edit task
+              setEditTask(item);
+              setTabIndex(3);
+            }}
             buttonStyle={{ minHeight: '100%' }}
           />
         }
