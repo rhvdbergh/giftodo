@@ -56,7 +56,10 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
             />
           }
         >
-          <ListItem.Content>
+          <ListItem.Content
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            {/* In task view, show text, else gifs */}
             {view === 'task' ? (
               <>
                 <ListItem.Title>{item.name}</ListItem.Title>
@@ -125,8 +128,10 @@ const styles = StyleSheet.create({
   gif: {
     display: 'flex',
     justifyContent: 'center',
-    width: '70%',
-    height: 200,
+    width: '90%',
+    marginLeft: '5%',
+    marginRight: '5%',
+    aspectRatio: 3 / 2,
   },
   gifContainer: {
     display: 'flex',
