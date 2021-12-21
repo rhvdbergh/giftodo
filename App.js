@@ -25,9 +25,19 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         {tabIndex === 0 && <AccountView />}
-        {tabIndex === 1 && <GifsView />}
+        {tabIndex === 1 && (
+          <TaskListView
+            setEditTask={setEditTask}
+            setTabIndex={setTabIndex}
+            view={'gif'}
+          />
+        )}
         {tabIndex === 2 && (
-          <TaskListView setEditTask={setEditTask} setTabIndex={setTabIndex} />
+          <TaskListView
+            setEditTask={setEditTask}
+            setTabIndex={setTabIndex}
+            view={'task'}
+          />
         )}
         {tabIndex === 3 && (
           <AddPage
