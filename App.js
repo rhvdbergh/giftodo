@@ -18,16 +18,31 @@ export default function App() {
   // local state for tab index
   const [tabIndex, setTabIndex] = useState(2);
 
+  // keeps track of items to edit
+  const [editTask, setEditTask] = useState({});
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         {tabIndex === 0 && <AccountView />}
         {tabIndex === 1 && <GifsView />}
-        {tabIndex === 2 && <TaskListView />}
-        {tabIndex === 3 && <AddPage setTabIndex={setTabIndex} />}
+        {tabIndex === 2 && (
+          <TaskListView setEditTask={setEditTask} setTabIndex={setTabIndex} />
+        )}
+        {tabIndex === 3 && (
+          <AddPage
+            setTabIndex={setTabIndex}
+            setEditTask={setEditTask}
+            editTask={editTask}
+          />
+        )}
         <Tab
           value={tabIndex}
-          onChange={(event) => setTabIndex(event)}
+          onChange={(event) => {
+            // clear the editTask
+            setEditTask({});
+            setTabIndex(event);
+          }}
           indicatorStyle={{
             backgroundColor: 'white',
             height: 3,
