@@ -35,7 +35,7 @@ export default function App() {
           variant="primary"
         >
           <Tab.Item
-            title="Overdue"
+            title="Due"
             titleStyle={{ fontSize: 12 }}
             icon={{ name: 'clock', type: 'font-awesome-5', color: 'white' }}
             onChange={() => console.log('hi')}

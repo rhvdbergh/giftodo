@@ -1,6 +1,12 @@
 import { useState } from 'react';
-import { StyleSheet, View, TextInput, ActivityIndicator } from 'react-native';
-import { colors, Input, Slider, Text, Image } from 'react-native-elements';
+import {
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  ActivityIndicator,
+} from 'react-native';
+import { colors, Slider, Text, Image, CheckBox } from 'react-native-elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 // set up an empty task object to start with
 const emptyTask = {
@@ -14,11 +20,12 @@ const emptyTask = {
 function AddPage() {
   // local state to control input
   const [task, setTask] = useState(emptyTask);
+  const [hasDueDate, setHasDueDate] = useState(false);
 
   console.log(`task`, task);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text>Task Name</Text>
       <TextInput
         placeholder="Enter Task Name"
@@ -45,12 +52,24 @@ function AddPage() {
         minimumTrackTintColor={colors.primary}
         maximumTrackTintColor={colors.grey4}
       />
+      <CheckBox
+        title="Due date"
+        checked={hasDueDate}
+        onPress={() => setHasDueDate(!hasDueDate)}
+      />
+      <DateTimePicker
+        value={task.due_date ?? new Date()}
+        disabled={!hasDueDate}
+        mode={'datetime'}
+        display="default"
+        onChange={(evt, date) => console.log(`event fired with: `, date)}
+      />
       <Image
         source={{ uri: task.gif_url }}
         containerStyle={styles.gif}
         PlaceholderContent={<ActivityIndicator />}
       />
-    </View>
+    </ScrollView>
   );
 }
 
