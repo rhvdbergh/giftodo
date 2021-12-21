@@ -123,8 +123,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   gif: {
+    display: 'flex',
+    justifyContent: 'center',
     width: '70%',
     height: 200,
+  },
+  gifContainer: {
+    display: 'flex',
+    justifyContent: 'center',
   },
 });
 
