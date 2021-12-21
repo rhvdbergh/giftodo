@@ -27,4 +27,106 @@ router.get('/', (req, res) => {
     });
 });
 
+// POST /api/task
+router.post('/', (req, res) => {
+  // when added, tasks are incomplete by default
+
+  // build a SQL query
+  const query = `
+    INSERT INTO "task" 
+    ("name", "description", "due_date", "priority", "gif_url")
+    VALUES
+    ($1, $2, $3, $4, $5);
+  `;
+
+  // parameterize the inputs
+  const values = [
+    req.body.name,
+    req.body.description,
+    req.body.due_date,
+    req.body.priority ?? 5, // add a default value of 5 if null
+    req.body.gif_url,
+  ];
+
+  // run the query
+  pool
+    .query(query, values)
+    .then((response) => {
+      res.sendStatus(201); // item was created
+    })
+    .catch((err) => {
+      console.log(
+        'There was an error creating the task in the database: ',
+        err
+      );
+      res.sendStatus(500); // tell the client something's gone wrong
+    });
+});
+
+// PUT /api/task/:id
+// updates a task
+router.put('/:id', (req, res) => {
+  // build the SQL query
+  const query = `
+    UPDATE "task"
+    SET 
+    name = $1,
+    description = $2, 
+    due_date = $3,
+    priority = $4,
+    gif_url = $5,
+    complete = $6
+    WHERE id = $7;
+  `;
+
+  // parameterize the inputs
+  const values = [
+    req.body.name,
+    req.body.description,
+    req.body.due_date,
+    req.body.priority,
+    req.body.gif_url,
+    req.body.complete,
+    req.params.id,
+  ];
+
+  // run the query
+  pool
+    .query(query, values)
+    .then((response) => {
+      res.sendStatus(204); // item was updated
+    })
+    .catch((err) => {
+      console.log(
+        'There was an error updating the task in the database: ',
+        err
+      );
+      res.sendStatus(500); // tell the client something's gone wrong
+    });
+});
+
+// DELETE /api/task/:id
+// deletes a specific task from the db
+router.delete('/:id', (req, res) => {
+  // build the SQL query
+  const query = `
+    DELETE FROM "task" 
+    WHERE id = $1;
+  `;
+
+  // run the query with parameterized input
+  pool
+    .query(query, [req.params.id])
+    .then((response) => {
+      res.sendStatus(204); // item was updated
+    })
+    .catch((err) => {
+      console.log(
+        'There was an error deleting the task from the database: ',
+        err
+      );
+      res.sendStatus(500); // tell the client something's gone wrong
+    });
+});
+
 module.exports = router;
