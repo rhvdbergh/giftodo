@@ -32,9 +32,9 @@ export default function App() {
           variant="primary"
         >
           <Tab.Item
-            title="Account"
+            title="Overdue"
             titleStyle={{ fontSize: 12 }}
-            icon={{ name: 'user', type: 'font-awesome-5', color: 'white' }}
+            icon={{ name: 'clock', type: 'font-awesome-5', color: 'white' }}
             onChange={() => console.log('hi')}
           />
           <Tab.Item
