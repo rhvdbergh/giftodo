@@ -10,6 +10,7 @@ const app = express();
 
 // set up the body parser middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // set up the routes
 app.use('/api/task', taskRouter);

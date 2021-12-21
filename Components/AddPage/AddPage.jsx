@@ -15,6 +15,8 @@ import {
   Button,
 } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import LOCALHOST_IP from '../../config';
+import axios from 'axios';
 
 // set up an empty task object to start with
 const emptyTask = {
@@ -28,9 +30,36 @@ const emptyTask = {
 function AddPage({ setTabIndex }) {
   // local state to control input
   const [task, setTask] = useState(emptyTask);
+  // the slider doesn't update correctly,
+  // so the priority needs to be handled separately
+  const [priority, setPriority] = useState(5);
   const [hasDueDate, setHasDueDate] = useState(false);
 
   console.log(`task`, task);
+
+  // checks to see if this task can be submitted
+  const validTask = () => {
+    return task.name !== null && task.name !== '';
+  };
+
+  const handleAdd = () => {
+    if (validTask()) {
+      axios
+        .post(`http://${LOCALHOST_IP}:5000/api/task`, {
+          ...task,
+          priority: priority,
+          due_date: hasDueDate ? task.due_date : null,
+        })
+        .then(() => {
+          // clear out the local state
+          setTask(emptyTask);
+          setPriority(5);
+          // move the user back to the tasks screen
+          setTabIndex(2);
+        })
+        .catch((err) => console.log('Error in adding post: ', err));
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -48,10 +77,10 @@ function AddPage({ setTabIndex }) {
         multiline
         onChangeText={(value) => setTask({ ...task, description: value })}
       />
-      <Text style={styles.text}>Select Priority: {task.priority}</Text>
+      <Text style={styles.text}>Select Priority: {priority}</Text>
       <Slider
-        value={task.priority}
-        onValueChange={(val) => setTask({ ...task, priority: val })}
+        value={priority}
+        onSlidingComplete={(val) => setPriority(val)}
         minimumValue={0}
         maximumValue={10}
         step={1}
@@ -123,6 +152,7 @@ function AddPage({ setTabIndex }) {
             marginHorizontal: 10,
             marginVertical: 10,
           }}
+          onPress={handleAdd}
         />
       </View>
     </ScrollView>

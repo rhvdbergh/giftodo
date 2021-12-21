@@ -31,6 +31,8 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   // when added, tasks are incomplete by default
 
+  console.log('in POST /api/task, req.body is', req.body);
+
   // build a SQL query
   const query = `
     INSERT INTO "task" 
