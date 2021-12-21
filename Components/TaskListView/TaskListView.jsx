@@ -52,8 +52,7 @@ const styles = StyleSheet.create({
   task: {
     backgroundColor: '#e8ec67',
     padding: 25,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    marginVertical: 1,
   },
   text: {
     fontSize: 24,
