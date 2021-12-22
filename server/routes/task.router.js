@@ -6,6 +6,7 @@ const pool = require('../modules/pool');
 // gets all the tasks on the server
 router.get('/', (req, res) => {
   console.log('/in GET /api/task');
+  console.log('req.query is:', req.query);
 
   let query;
 
@@ -41,14 +42,16 @@ router.get('/', (req, res) => {
     }
     direction = req.query.direction === 'asc' ? 'ASC' : 'DESC';
     // but if we're searching on priority, this should be reversed
-    type === 'priority' && direction === 'ASC'
-      ? (direction = 'DESC')
-      : (direction = 'ASC');
+    if (type === 'priority') {
+      direction === 'ASC' ? (direction = 'DESC') : (direction = 'ASC');
+    }
 
     // build a SQL query
     query = `
       SELECT * FROM "task" ORDER BY ${type} ${direction};
     `;
+
+    console.log('search query:', query);
   }
 
   // run the query

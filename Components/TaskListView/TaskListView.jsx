@@ -53,7 +53,12 @@ function TaskListView({
             {view === 'task' || view === 'overdue' ? (
               <>
                 <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
+                <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
+                <ListItem.Subtitle>priority: {item.priority}</ListItem.Subtitle>
+                <ListItem.Subtitle>createad: {item.created}</ListItem.Subtitle>
+                <ListItem.Subtitle>
+                  description: {item.description}
+                </ListItem.Subtitle>
               </>
             ) : (
               <>
