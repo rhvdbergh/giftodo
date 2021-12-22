@@ -78,7 +78,7 @@ export default function App() {
     }
 
     // now use queries to refresh the taskList
-    refreshWithSort(type, direction);
+    refreshWithSort(type, sortDirection);
   };
 
   return (
