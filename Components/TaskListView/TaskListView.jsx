@@ -39,7 +39,7 @@ function TaskListView({
           today > new Date(item.due_date) &&
           view === 'overdue')) && (
         <TouchableWithoutFeedback
-          onLongPress={() => {
+          onPress={() => {
             console.log('you pressed it. item:', item);
             setCurrentTask(item);
             setShowMore(true);
@@ -144,6 +144,7 @@ function TaskListView({
       <Overlay
         isVisible={showMore}
         onBackdropPress={() => setShowMore(!showMore)}
+        fullScreen
       >
         <ScrollView>
           <ListItem.Title style={styles.centeredTitle}>
