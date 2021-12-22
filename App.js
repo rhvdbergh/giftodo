@@ -104,41 +104,43 @@ export default function App() {
             }}
           />
         </Tab>
-        <SpeedDial
-          isOpen={openSpeedDial}
-          style={{ marginBottom: 58 }}
-          icon={{
-            name: 'sort-amount-down-alt',
-            type: 'font-awesome-5',
-            color: '#fff',
-          }}
-          openIcon={{ name: 'close', color: '#fff' }}
-          title={openSpeedDial && 'Sort by'}
-          transitionDuration={100}
-          onOpen={() => setOpenSpeedDial(!openSpeedDial)}
-          onClose={() => setOpenSpeedDial(!openSpeedDial)}
-        >
-          <SpeedDial.Action
-            icon={{ name: 'add', color: '#fff' }}
-            title="Priority"
-            onPress={() => console.log('Add Something')}
-          />
-          <SpeedDial.Action
-            icon={{ name: 'add', color: '#fff' }}
-            title="Date Added"
-            onPress={() => console.log('Add Something')}
-          />
-          <SpeedDial.Action
-            icon={{ name: 'add', color: '#fff' }}
-            title="Due Date"
-            onPress={() => console.log('Add Something')}
-          />
-          <SpeedDial.Action
-            icon={{ name: 'add', color: '#fff' }}
-            title="Name"
-            onPress={() => console.log('Add Something')}
-          />
-        </SpeedDial>
+        {tabIndex !== 3 && (
+          <SpeedDial
+            isOpen={openSpeedDial}
+            style={{ marginBottom: 58 }}
+            icon={{
+              name: 'sort-amount-down-alt',
+              type: 'font-awesome-5',
+              color: '#fff',
+            }}
+            openIcon={{ name: 'close', color: '#fff' }}
+            title={openSpeedDial && 'Sort by'}
+            transitionDuration={100}
+            onOpen={() => setOpenSpeedDial(!openSpeedDial)}
+            onClose={() => setOpenSpeedDial(!openSpeedDial)}
+          >
+            <SpeedDial.Action
+              icon={{ name: 'add', color: '#fff' }}
+              title="Priority"
+              onPress={() => console.log('Add Something')}
+            />
+            <SpeedDial.Action
+              icon={{ name: 'add', color: '#fff' }}
+              title="Date Added"
+              onPress={() => console.log('Add Something')}
+            />
+            <SpeedDial.Action
+              icon={{ name: 'add', color: '#fff' }}
+              title="Due Date"
+              onPress={() => console.log('Add Something')}
+            />
+            <SpeedDial.Action
+              icon={{ name: 'add', color: '#fff' }}
+              title="Name"
+              onPress={() => console.log('Add Something')}
+            />
+          </SpeedDial>
+        )}
       </SafeAreaView>
     </SafeAreaProvider>
   );
