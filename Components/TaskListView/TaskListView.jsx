@@ -45,53 +45,32 @@ function TaskListView({
             setShowMore(true);
           }}
         >
-          <View>
-            <ListItem.Swipeable
-              leftContent={
-                <Button
-                  title="Edit"
-                  icon={{
-                    name: 'edit',
-                    type: 'font-awesome-5',
-                    color: 'white',
-                  }}
-                  onPress={() => {
-                    // set the edit task
-                    setEditTask(item);
-                    setTabIndex(3);
-                  }}
-                  buttonStyle={{ minHeight: '100%' }}
-                />
-              }
-              rightContent={
-                <Button
-                  title="Delete"
-                  icon={{
-                    name: 'trash-alt',
-                    type: 'font-awesome-5',
-                    color: 'white',
-                  }}
-                  onPress={() => handleDelete(item.id)}
-                  buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-                />
-              }
-            >
+          <View style={{ width: '100%' }}>
+            <ListItem style={{ width: '100%' }}>
               <ListItem.Content
                 style={{ display: 'flex', justifyContent: 'center' }}
               >
                 {/* In task view, show text, else gifs */}
                 {view === 'task' || view === 'overdue' ? (
                   <>
-                    <ListItem.Title>{item.name}</ListItem.Title>
-                    <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
+                    <ListItem.Title
+                      style={{
+                        ...styles.centeredTitle,
+                        color:
+                          today > new Date(item.due_date)
+                            ? colors.error
+                            : 'black',
+                      }}
+                    >
+                      {item.name}
+                    </ListItem.Title>
+
                     <ListItem.Subtitle>
-                      priority: {item.priority}
+                      Priority: {item.priority}
                     </ListItem.Subtitle>
                     <ListItem.Subtitle>
-                      createad: {item.created}
-                    </ListItem.Subtitle>
-                    <ListItem.Subtitle>
-                      description: {item.description}
+                      {item.due_date !== null &&
+                        `Due: ${new Date(item.due_date).toLocaleDateString()}`}
                     </ListItem.Subtitle>
                   </>
                 ) : (
@@ -107,7 +86,7 @@ function TaskListView({
                   </>
                 )}
               </ListItem.Content>
-            </ListItem.Swipeable>
+            </ListItem>
           </View>
         </TouchableWithoutFeedback>
       )
@@ -217,5 +196,34 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
 });
+
+//  leftContent={
+//                 <Button
+//                   title="Edit"
+//                   icon={{
+//                     name: 'edit',
+//                     type: 'font-awesome-5',
+//                     color: 'white',
+//                   }}
+//                   onPress={() => {
+//                     // set the edit task
+//                     setEditTask(item);
+//                     setTabIndex(3);
+//                   }}
+//                   buttonStyle={{ minHeight: '100%' }}
+//                 />
+//               }
+//               rightContent={
+//                 <Button
+//                   title="Delete"
+//                   icon={{
+//                     name: 'trash-alt',
+//                     type: 'font-awesome-5',
+//                     color: 'white',
+//                   }}
+//                   onPress={() => handleDelete(item.id)}
+//                   buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+//                 />
+//               }
 
 export default TaskListView;
