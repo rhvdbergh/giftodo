@@ -97,105 +97,107 @@ function AddPage({
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <>
       <TaskListHeader view={editTask.id ? 'edit' : 'add'} />
-      <Text style={styles.text}>Task Name</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Task Name"
-        value={task.name}
-        onChangeText={(value) => setTask({ ...task, name: value })}
-      />
-      <Text style={styles.text}>Task Description</Text>
-      <TextInput
-        style={{ ...styles.input, height: 100 }}
-        value={task.description}
-        placeholder="Enter Task Description"
-        multiline
-        onChangeText={(value) => setTask({ ...task, description: value })}
-      />
-      <Text style={styles.text}>Select Priority: {priority}</Text>
-      <Slider
-        value={priority}
-        onSlidingComplete={(val) => setPriority(val)}
-        minimumValue={0}
-        maximumValue={10}
-        step={1}
-        allowTouchTrack
-        trackStyle={{ backgroundColor: 'transparent' }}
-        thumbStyle={{ height: 20, width: 20 }}
-        thumbTintColor={colors.primary}
-        minimumTrackTintColor={colors.primary}
-        maximumTrackTintColor={colors.grey4}
-      />
-      <View style={styles.dateContainer}>
-        <CheckBox
-          textStyle={styles.text}
-          title="Due date"
-          checked={hasDueDate}
-          onPress={() => setHasDueDate(!hasDueDate)}
+      <ScrollView style={styles.container}>
+        <Text style={styles.text}>Task Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Task Name"
+          value={task.name}
+          onChangeText={(value) => setTask({ ...task, name: value })}
         />
-      </View>
-      <DateTimePicker
-        value={task.due_date ? new Date(task.due_date) : new Date()}
-        minimumDate={new Date()}
-        disabled={!hasDueDate}
-        mode={'datetime'}
-        display="default"
-        onChange={(evt, date) => setTask({ ...task, due_date: date })}
-      />
-      <View style={styles.gifContainer}>
-        <Button
-          style={{ marginBottom: 20 }}
-          title="Generate Gif"
-          buttonStyle={{
-            backgroundColor: colors.primary,
-            borderRadius: 3,
-          }}
-          containerStyle={{
-            width: 200,
-            marginHorizontal: 50,
-            marginVertical: 10,
-          }}
-          onPress={handleGenerateGif}
+        <Text style={styles.text}>Task Description</Text>
+        <TextInput
+          style={{ ...styles.input, height: 100 }}
+          value={task.description}
+          placeholder="Enter Task Description"
+          multiline
+          onChangeText={(value) => setTask({ ...task, description: value })}
         />
-        {task.gif_url && (
-          <Image
-            source={{ uri: task.gif_url }}
-            containerStyle={styles.gif}
-            PlaceholderContent={<ActivityIndicator />}
+        <Text style={styles.text}>Select Priority: {priority}</Text>
+        <Slider
+          value={priority}
+          onSlidingComplete={(val) => setPriority(val)}
+          minimumValue={0}
+          maximumValue={10}
+          step={1}
+          allowTouchTrack
+          trackStyle={{ backgroundColor: 'transparent' }}
+          thumbStyle={{ height: 20, width: 20 }}
+          thumbTintColor={colors.primary}
+          minimumTrackTintColor={colors.primary}
+          maximumTrackTintColor={colors.grey4}
+        />
+        <View style={styles.dateContainer}>
+          <CheckBox
+            textStyle={styles.text}
+            title="Due date"
+            checked={hasDueDate}
+            onPress={() => setHasDueDate(!hasDueDate)}
           />
-        )}
-      </View>
-      <View style={styles.buttonbox}>
-        <Button
-          title="Cancel"
-          buttonStyle={{
-            backgroundColor: colors.error,
-            borderRadius: 3,
-          }}
-          containerStyle={{
-            width: '40%',
-            marginHorizontal: 10,
-            marginVertical: 10,
-          }}
-          onPress={() => setTabIndex(2)}
+        </View>
+        <DateTimePicker
+          value={task.due_date ? new Date(task.due_date) : new Date()}
+          minimumDate={new Date()}
+          disabled={!hasDueDate}
+          mode={'datetime'}
+          display="default"
+          onChange={(evt, date) => setTask({ ...task, due_date: date })}
         />
-        <Button
-          title={editTask.id ? 'Save' : 'Add'}
-          buttonStyle={{
-            backgroundColor: colors.primary,
-            borderRadius: 3,
-          }}
-          containerStyle={{
-            width: '40%',
-            marginHorizontal: 10,
-            marginVertical: 10,
-          }}
-          onPress={handleAdd}
-        />
-      </View>
-    </ScrollView>
+        <View style={styles.gifContainer}>
+          <Button
+            style={{ marginBottom: 20 }}
+            title="Generate Gif"
+            buttonStyle={{
+              backgroundColor: colors.primary,
+              borderRadius: 3,
+            }}
+            containerStyle={{
+              width: 200,
+              marginHorizontal: 50,
+              marginVertical: 10,
+            }}
+            onPress={handleGenerateGif}
+          />
+          {task.gif_url && (
+            <Image
+              source={{ uri: task.gif_url }}
+              containerStyle={styles.gif}
+              PlaceholderContent={<ActivityIndicator />}
+            />
+          )}
+        </View>
+        <View style={styles.buttonbox}>
+          <Button
+            title="Cancel"
+            buttonStyle={{
+              backgroundColor: colors.error,
+              borderRadius: 3,
+            }}
+            containerStyle={{
+              width: '40%',
+              marginHorizontal: 10,
+              marginVertical: 10,
+            }}
+            onPress={() => setTabIndex(2)}
+          />
+          <Button
+            title={editTask.id ? 'Save' : 'Add'}
+            buttonStyle={{
+              backgroundColor: colors.primary,
+              borderRadius: 3,
+            }}
+            containerStyle={{
+              width: '40%',
+              marginHorizontal: 10,
+              marginVertical: 10,
+            }}
+            onPress={handleAdd}
+          />
+        </View>
+      </ScrollView>
+    </>
   );
 }
 
