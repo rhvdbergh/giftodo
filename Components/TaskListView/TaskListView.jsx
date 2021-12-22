@@ -46,10 +46,17 @@ function TaskListView({
             setShowMore(true);
           }}
         >
-          <View style={{ width: '100%' }}>
+          <View
+            style={{
+              width: '100%',
+            }}
+          >
             <ListItem style={{ width: '100%' }}>
               <ListItem.Content
-                style={{ display: 'flex', justifyContent: 'center' }}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
               >
                 {/* In task view, show text, else gifs */}
                 {view === 'task' || view === 'overdue' ? (
@@ -57,30 +64,41 @@ function TaskListView({
                     <ListItem.Title
                       style={{
                         ...styles.centeredTitle,
-                        color:
-                          item.due_date !== null &&
-                          (today > new Date(item.due_date)
-                            ? colors.error
-                            : 'black'),
+                        color: item.complete
+                          ? colors.grey4
+                          : item.due_date !== null &&
+                            (today > new Date(item.due_date)
+                              ? colors.error
+                              : 'black'),
                       }}
                     >
                       {item.name}
                     </ListItem.Title>
 
-                    <ListItem.Subtitle>
+                    <ListItem.Subtitle
+                      style={{
+                        color: item.complete ? colors.grey4 : 'black',
+                      }}
+                    >
                       Priority: {item.priority}
                     </ListItem.Subtitle>
                     <ListItem.Subtitle
                       style={{
-                        color:
-                          item.due_date !== null &&
-                          (today > new Date(item.due_date)
-                            ? colors.error
-                            : 'black'),
+                        color: item.complete
+                          ? colors.grey4
+                          : item.due_date !== null &&
+                            (today > new Date(item.due_date)
+                              ? colors.error
+                              : 'black'),
                       }}
                     >
                       {item.due_date !== null &&
+                        !item.complete &&
                         `Due: ${new Date(item.due_date).toLocaleDateString()}`}
+                      {item.complete &&
+                        `Completed on: ${new Date(
+                          item.completed_on
+                        ).toLocaleDateString()}`}
                     </ListItem.Subtitle>
                   </>
                 ) : (
@@ -250,6 +268,11 @@ const styles = StyleSheet.create({
   },
   task: {
     backgroundColor: '#e8ec67',
+    padding: 25,
+    marginVertical: 1,
+  },
+  completedTask: {
+    backgroundColor: colors.grey5,
     padding: 25,
     marginVertical: 1,
   },

@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
   if (!req.query.type) {
     // build a SQL query for normal search
     query = `
-  SELECT * FROM "task" ORDER BY "id";
+  SELECT * FROM "task" ORDER BY completed_on ASC NULLS FIRST, "id";
   `;
   } else {
     // we're doing a sort search
