@@ -58,9 +58,10 @@ function TaskListView({
                       style={{
                         ...styles.centeredTitle,
                         color:
-                          today > new Date(item.due_date)
+                          item.due_date !== null &&
+                          (today > new Date(item.due_date)
                             ? colors.error
-                            : 'black',
+                            : 'black'),
                       }}
                     >
                       {item.name}
@@ -72,9 +73,10 @@ function TaskListView({
                     <ListItem.Subtitle
                       style={{
                         color:
-                          today > new Date(item.due_date)
+                          item.due_date !== null &&
+                          (today > new Date(item.due_date)
                             ? colors.error
-                            : 'black',
+                            : 'black'),
                       }}
                     >
                       {item.due_date !== null &&

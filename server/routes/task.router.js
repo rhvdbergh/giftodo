@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
 
     // build a SQL query
     query = `
-      SELECT * FROM "task" ORDER BY ${type} ${direction};
+      SELECT * FROM "task" ORDER BY completed_on ASC NULLS FIRST, LOWER(${type}) ${direction};
     `;
 
     console.log('search query:', query);
