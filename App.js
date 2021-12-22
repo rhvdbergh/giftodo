@@ -14,6 +14,13 @@ import { LOCALHOST_IP } from './config';
 import TaskListView from './Components/TaskListView/TaskListView';
 import AddPage from './Components/AddPage/AddPage';
 
+// set theme colors
+const theme = {
+  colors: {
+    primary: '#e64a19',
+  },
+};
+
 export default function App() {
   // local state for the tasklist
   const [taskList, setTaskList] = useState([]);
@@ -82,153 +89,162 @@ export default function App() {
   };
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle="light-content" />
-      <SafeAreaView style={styles.container}>
-        {tabIndex === 0 && (
-          <TaskListView
-            setEditTask={setEditTask}
-            setTabIndex={setTabIndex}
-            taskList={taskList}
-            setTaskList={setTaskList}
-            view={'overdue'}
-          />
-        )}
-        {tabIndex === 1 && (
-          <TaskListView
-            setEditTask={setEditTask}
-            setTabIndex={setTabIndex}
-            taskList={taskList}
-            setTaskList={setTaskList}
-            view={'gif'}
-          />
-        )}
-        {tabIndex === 2 && (
-          <TaskListView
-            setEditTask={setEditTask}
-            setTabIndex={setTabIndex}
-            taskList={taskList}
-            setTaskList={setTaskList}
-            view={'task'}
-          />
-        )}
-        {tabIndex === 3 && (
-          <AddPage
-            setTabIndex={setTabIndex}
-            setEditTask={setEditTask}
-            refreshWithSort={refreshWithSort}
-            refreshWithoutSort={refreshWithoutSort}
-            latestSortType={latestSortType}
-            sortDesc={sortDesc}
-            editTask={editTask}
-          />
-        )}
-        <Tab
-          value={tabIndex}
-          onChange={(event) => {
-            // clear the editTask
-            setEditTask({});
-            setTabIndex(event);
-          }}
-          indicatorStyle={{
-            backgroundColor: 'white',
-            height: 3,
-          }}
-          variant="primary"
-        >
-          <Tab.Item
-            title="Due"
-            titleStyle={{ fontSize: 12 }}
-            icon={{ name: 'clock', type: 'font-awesome-5', color: 'white' }}
-          />
-          <Tab.Item
-            title="Gifs"
-            titleStyle={{ fontSize: 12 }}
-            icon={{
-              name: 'grin-squint',
-              type: 'font-awesome-5',
-              color: 'white',
+    <ThemeProvider theme={theme}>
+      <SafeAreaProvider>
+        <StatusBar
+          barStyle="light-content"
+          style={{ backgroundColor: '#e64a19' }}
+        />
+        <SafeAreaView style={styles.container}>
+          {tabIndex === 0 && (
+            <TaskListView
+              setEditTask={setEditTask}
+              setTabIndex={setTabIndex}
+              taskList={taskList}
+              setTaskList={setTaskList}
+              view={'overdue'}
+            />
+          )}
+          {tabIndex === 1 && (
+            <TaskListView
+              setEditTask={setEditTask}
+              setTabIndex={setTabIndex}
+              taskList={taskList}
+              setTaskList={setTaskList}
+              view={'gif'}
+            />
+          )}
+          {tabIndex === 2 && (
+            <TaskListView
+              setEditTask={setEditTask}
+              setTabIndex={setTabIndex}
+              taskList={taskList}
+              setTaskList={setTaskList}
+              view={'task'}
+            />
+          )}
+          {tabIndex === 3 && (
+            <AddPage
+              setTabIndex={setTabIndex}
+              setEditTask={setEditTask}
+              refreshWithSort={refreshWithSort}
+              refreshWithoutSort={refreshWithoutSort}
+              latestSortType={latestSortType}
+              sortDesc={sortDesc}
+              editTask={editTask}
+            />
+          )}
+          <Tab
+            value={tabIndex}
+            style={{ backgroundColor: '#e64a19' }}
+            onChange={(event) => {
+              // clear the editTask
+              setEditTask({});
+              setTabIndex(event);
             }}
-          />
-          <Tab.Item
-            title="Tasks"
-            titleStyle={{ fontSize: 12 }}
-            icon={{
-              name: 'tasks',
-              type: 'font-awesome-5',
-              color: 'white',
+            indicatorStyle={{
+              backgroundColor: 'white',
+              height: 3,
             }}
-          />
-          <Tab.Item
-            title="Add"
-            titleStyle={{ fontSize: 12 }}
-            icon={{
-              name: 'plus',
-              type: 'font-awesome-5',
-              color: 'white',
-            }}
-          />
-        </Tab>
-        {tabIndex !== 3 && (
-          <SpeedDial
-            isOpen={openSpeedDial}
-            style={{ marginBottom: 58 }}
-            icon={{
-              name: 'sort-amount-down-alt',
-              type: 'font-awesome-5',
-              color: '#fff',
-            }}
-            openIcon={{ name: 'close', color: '#fff' }}
-            title={openSpeedDial && 'Sort by'}
-            transitionDuration={100}
-            onOpen={() => setOpenSpeedDial(!openSpeedDial)}
-            onClose={() => setOpenSpeedDial(!openSpeedDial)}
+            variant="primary"
           >
-            <SpeedDial.Action
+            <Tab.Item
+              title="Due"
+              titleStyle={{ fontSize: 12 }}
+              icon={{ name: 'clock', type: 'font-awesome-5', color: 'white' }}
+            />
+            <Tab.Item
+              title="Gifs"
+              titleStyle={{ fontSize: 12 }}
               icon={{
-                name: 'exclamation',
+                name: 'grin-squint',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+            />
+            <Tab.Item
+              title="Tasks"
+              titleStyle={{ fontSize: 12 }}
+              icon={{
+                name: 'tasks',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+            />
+            <Tab.Item
+              title="Add"
+              titleStyle={{ fontSize: 12 }}
+              icon={{
+                name: 'plus',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+            />
+          </Tab>
+          {tabIndex !== 3 && (
+            <SpeedDial
+              isOpen={openSpeedDial}
+              style={{ marginBottom: 58 }}
+              icon={{
+                name: 'sort-amount-down-alt',
                 type: 'font-awesome-5',
                 color: '#fff',
               }}
-              title="Priority"
-              onPress={() => handleSort('priority')}
-            />
-            <SpeedDial.Action
-              icon={{
-                name: 'calendar-alt',
-                type: 'font-awesome-5',
+              openIcon={{
+                name: 'close',
                 color: '#fff',
               }}
-              title="Date Added"
-              onPress={() => handleSort('created')}
-            />
-            <SpeedDial.Action
-              icon={{ name: 'clock', type: 'font-awesome-5', color: '#fff' }}
-              title="Due Date"
-              onPress={() => handleSort('due_date')}
-            />
-            <SpeedDial.Action
-              icon={{
-                name:
-                  latestSortType === 'name' && sortDesc
-                    ? 'sort-alpha-down'
-                    : 'sort-alpha-up',
-                type: 'font-awesome-5',
-                color: '#fff',
-              }}
-              title="Name"
-              onPress={() => handleSort('name')}
-            />
-          </SpeedDial>
-        )}
-      </SafeAreaView>
-    </SafeAreaProvider>
+              title={openSpeedDial && 'Sort by'}
+              transitionDuration={100}
+              onOpen={() => setOpenSpeedDial(!openSpeedDial)}
+              onClose={() => setOpenSpeedDial(!openSpeedDial)}
+            >
+              <SpeedDial.Action
+                icon={{
+                  name: 'exclamation',
+                  type: 'font-awesome-5',
+                  color: '#fff',
+                }}
+                title="Priority"
+                onPress={() => handleSort('priority')}
+              />
+              <SpeedDial.Action
+                icon={{
+                  name: 'calendar-alt',
+                  type: 'font-awesome-5',
+                  color: '#fff',
+                }}
+                title="Date Added"
+                onPress={() => handleSort('created')}
+              />
+              <SpeedDial.Action
+                icon={{ name: 'clock', type: 'font-awesome-5', color: '#fff' }}
+                title="Due Date"
+                onPress={() => handleSort('due_date')}
+              />
+              <SpeedDial.Action
+                icon={{
+                  name:
+                    latestSortType === 'name' && sortDesc
+                      ? 'sort-alpha-down'
+                      : 'sort-alpha-up',
+                  type: 'font-awesome-5',
+                  color: '#fff',
+                }}
+                title="Name"
+                onPress={() => handleSort('name')}
+              />
+            </SpeedDial>
+          )}
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary,
+    backgroundColor: '#e64a19',
   },
 });

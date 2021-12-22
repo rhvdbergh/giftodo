@@ -1,27 +1,36 @@
 import { Text, StyleSheet, View } from 'react-native';
-import { colors } from 'react-native-elements';
+import { colors, ThemeProvider } from 'react-native-elements';
+
+// set theme colors
+const theme = {
+  colors: {
+    primary: '#e64a19',
+  },
+};
 
 function TaskListHeader({ view }) {
   return (
-    <View style={styles.header}>
-      <Text style={styles.text}>
-        {view === 'task'
-          ? 'My Tasks'
-          : view === 'gif'
-          ? 'Task Gifs'
-          : view === 'edit'
-          ? 'Edit'
-          : view === 'add'
-          ? 'Add'
-          : 'Overdue'}
-      </Text>
-    </View>
+    <ThemeProvider theme={theme}>
+      <View style={styles.header}>
+        <Text style={styles.text}>
+          {view === 'task'
+            ? 'My Tasks'
+            : view === 'gif'
+            ? 'Task Gifs'
+            : view === 'edit'
+            ? 'Edit'
+            : view === 'add'
+            ? 'Add'
+            : 'Overdue'}
+        </Text>
+      </View>
+    </ThemeProvider>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: colors.primary,
+    backgroundColor: '#e64a19',
     padding: 30,
     marginTop: 0,
     marginVertical: 1,

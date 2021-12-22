@@ -14,6 +14,7 @@ import {
   Image,
   Overlay,
   colors,
+  Divider,
 } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
@@ -94,6 +95,7 @@ function TaskListView({
                 )}
               </ListItem.Content>
             </ListItem>
+            <Divider />
           </View>
         </TouchableWithoutFeedback>
       )
@@ -275,6 +277,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   modalButton: {
+    backgroundColor: colors.primary,
     marginTop: 10,
     marginLeft: 15,
     marginRight: 15,
