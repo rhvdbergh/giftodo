@@ -1,6 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { Button, ListItem, Image } from 'react-native-elements';
+import { useState } from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import { Button, ListItem, Image, Overlay } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
@@ -13,6 +20,9 @@ function TaskListView({
 }) {
   const today = new Date();
 
+  // local state to keep track of modal
+  const [showMore, setShowMore] = useState(false);
+
   const renderTask = ({ item }) => {
     return (
       ((item.gif_url !== null && view === 'gif') ||
@@ -20,60 +30,89 @@ function TaskListView({
         (item.due_date !== null &&
           today > new Date(item.due_date) &&
           view === 'overdue')) && (
-        <ListItem.Swipeable
-          leftContent={
-            <Button
-              title="Edit"
-              icon={{ name: 'edit', type: 'font-awesome-5', color: 'white' }}
-              onPress={() => {
-                // set the edit task
-                setEditTask(item);
-                setTabIndex(3);
-              }}
-              buttonStyle={{ minHeight: '100%' }}
-            />
-          }
-          rightContent={
-            <Button
-              title="Delete"
-              icon={{
-                name: 'trash-alt',
-                type: 'font-awesome-5',
-                color: 'white',
-              }}
-              onPress={() => handleDelete(item.id)}
-              buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-            />
-          }
+        <TouchableWithoutFeedback
+          onPress={() => {
+            console.log('you pressed it. item:', item);
+            setShowMore(true);
+          }}
         >
-          <ListItem.Content
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            {/* In task view, show text, else gifs */}
-            {view === 'task' || view === 'overdue' ? (
-              <>
-                <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
-                <ListItem.Subtitle>priority: {item.priority}</ListItem.Subtitle>
-                <ListItem.Subtitle>createad: {item.created}</ListItem.Subtitle>
-                <ListItem.Subtitle>
-                  description: {item.description}
-                </ListItem.Subtitle>
-              </>
-            ) : (
-              <>
-                <ListItem.Title style={styles.centeredTitle}>
-                  {item.name}
-                </ListItem.Title>
-                <Image
-                  source={{ uri: item.gif_url }}
-                  containerStyle={styles.gif}
-                  PlaceholderContent={<ActivityIndicator />}
+          <View>
+            <ListItem.Swipeable
+              leftContent={
+                <Button
+                  title="Edit"
+                  icon={{
+                    name: 'edit',
+                    type: 'font-awesome-5',
+                    color: 'white',
+                  }}
+                  onPress={() => {
+                    // set the edit task
+                    setEditTask(item);
+                    setTabIndex(3);
+                  }}
+                  buttonStyle={{ minHeight: '100%' }}
                 />
-              </>
-            )}
-          </ListItem.Content>
-        </ListItem.Swipeable>
+              }
+              rightContent={
+                <Button
+                  title="Delete"
+                  icon={{
+                    name: 'trash-alt',
+                    type: 'font-awesome-5',
+                    color: 'white',
+                  }}
+                  onPress={() => handleDelete(item.id)}
+                  buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+                />
+              }
+            >
+              <ListItem.Content
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                {/* In task view, show text, else gifs */}
+                {view === 'task' || view === 'overdue' ? (
+                  <>
+                    <ListItem.Title>{item.name}</ListItem.Title>
+                    <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
+                    <ListItem.Subtitle>
+                      priority: {item.priority}
+                    </ListItem.Subtitle>
+                    <ListItem.Subtitle>
+                      createad: {item.created}
+                    </ListItem.Subtitle>
+                    <ListItem.Subtitle>
+                      description: {item.description}
+                    </ListItem.Subtitle>
+                  </>
+                ) : (
+                  <>
+                    <ListItem.Title style={styles.centeredTitle}>
+                      {item.name}
+                    </ListItem.Title>
+                    <Image
+                      source={{ uri: item.gif_url }}
+                      containerStyle={styles.gif}
+                      PlaceholderContent={<ActivityIndicator />}
+                    />
+                  </>
+                )}
+              </ListItem.Content>
+            </ListItem.Swipeable>
+            <Overlay
+              isVisible={showMore}
+              onBackdropPress={() => setShowMore(!showMore)}
+            >
+              <ListItem.Title>{item.name}</ListItem.Title>
+              <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
+              <ListItem.Subtitle>priority: {item.priority}</ListItem.Subtitle>
+              <ListItem.Subtitle>createad: {item.created}</ListItem.Subtitle>
+              <ListItem.Subtitle>
+                description: {item.description}
+              </ListItem.Subtitle>
+            </Overlay>
+          </View>
+        </TouchableWithoutFeedback>
       )
     );
   };
