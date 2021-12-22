@@ -28,9 +28,9 @@ export default function App() {
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
   // keeps track of sort position
-  // default is ascending sort
-  const [sortDesc, setSortDesc] = useState(false);
-  const [latestSortType, setLatestSortType] = useState('');
+  // default is descending sort
+  const [sortDesc, setSortDesc] = useState(true);
+  const [latestSortType, setLatestSortType] = useState('name');
 
   // on app load, retrieve the taskList
   useEffect(() => {
@@ -53,8 +53,8 @@ export default function App() {
     } else {
       // use the normal sortDirection
       sortDirection = 'asc';
-      // and return sortDesc to false
-      setSortDesc(false);
+      // and return sortDesc to true
+      setSortDesc(true);
     }
 
     // now use queries to refresh the taskList
@@ -67,8 +67,6 @@ export default function App() {
         setTaskList(data);
         // update the latestSortType
         setLatestSortType(type);
-        // close the speedDial
-        setOpenSpeedDial(false);
       })
       .catch((err) => console.log('Error in fetch for sort: ', err));
   };
@@ -199,8 +197,8 @@ export default function App() {
               icon={{
                 name:
                   latestSortType === 'name' && sortDesc
-                    ? 'sort-alpha-up'
-                    : 'sort-alpha-down',
+                    ? 'sort-alpha-down'
+                    : 'sort-alpha-up',
                 type: 'font-awesome-5',
                 color: '#fff',
               }}

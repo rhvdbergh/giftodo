@@ -7,10 +7,49 @@ const pool = require('../modules/pool');
 router.get('/', (req, res) => {
   console.log('/in GET /api/task');
 
-  // build a SQL query
-  const query = `
+  let query;
+
+  // if there is a query for sort, we will run a different search query
+  if (!req.query.type) {
+    // build a SQL query for normal search
+    query = `
   SELECT * FROM "task" ORDER BY "id";
   `;
+  } else {
+    // we're doing a sort search
+
+    // don't accept input directly from the user!
+    // rather, assign variables based on client input
+    // with defaults if not within acceptable range
+    let direction, type;
+    switch (req.query.type) {
+      case 'priority':
+        type = 'priority';
+        break;
+      case 'created':
+        type = 'created';
+        break;
+      case 'due_date':
+        type = 'due_date';
+        break;
+      case 'name':
+        type = 'name';
+        break;
+      default:
+        type = 'id';
+        break;
+    }
+    direction = req.query.direction === 'asc' ? 'ASC' : 'DESC';
+    // but if we're searching on priority, this should be reversed
+    type === 'priority' && direction === 'ASC'
+      ? (direction = 'DESC')
+      : (direction = 'ASC');
+
+    // build a SQL query
+    query = `
+      SELECT * FROM "task" ORDER BY ${type} ${direction};
+    `;
+  }
 
   // run the query
   pool
