@@ -10,6 +10,8 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
   const [taskList, setTaskList] = useState([]);
   const [loaded, setLoaded] = useState(0); // forces the Flatlist to update
 
+  const today = new Date();
+
   // on page load, retrieve the taskList
   useEffect(() => {
     fetch(`http://${LOCALHOST_IP}:5000/api/task`)
@@ -23,7 +25,11 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
 
   const renderTask = ({ item }) => {
     return (
-      item.gif_url && (
+      ((item.gif_url !== null && view === 'gif') ||
+        view === 'task' ||
+        (item.due_date !== null &&
+          today > new Date(item.due_date) &&
+          view === 'overdue')) && (
         <ListItem.Swipeable
           leftContent={
             <Button
@@ -54,12 +60,12 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
             style={{ display: 'flex', justifyContent: 'center' }}
           >
             {/* In task view, show text, else gifs */}
-            {view === 'task' ? (
+            {view === 'task' || view === 'overdue' ? (
               <>
                 <ListItem.Title>{item.name}</ListItem.Title>
                 <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
               </>
-            ) : view === 'gif' ? (
+            ) : (
               <>
                 <ListItem.Title style={styles.centeredTitle}>
                   {item.name}
@@ -69,11 +75,6 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
                   containerStyle={styles.gif}
                   PlaceholderContent={<ActivityIndicator />}
                 />
-              </>
-            ) : (
-              <>
-                <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
               </>
             )}
           </ListItem.Content>
