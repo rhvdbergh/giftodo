@@ -174,4 +174,30 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+// PUT /api/task/complete/:id
+// updates a specific task to be set to complete
+router.put('/complete/:id', (req, res) => {
+  console.log('in PUT /api/task/complete/:id');
+  // build the SQL query
+  const query = `
+    UPDATE "task"
+    SET "complete" = true, completed_on = NOW()
+    WHERE "id" = $1;
+  `;
+
+  // run the query
+  pool
+    .query(query, [req.params.id])
+    .then((response) => {
+      res.sendStatus(204); // item was updated
+    })
+    .catch((err) => {
+      console.log(
+        'There was an error updating the task to complete on the database: ',
+        err
+      );
+      res.sendStatus(500); // tell the client something's gone wrong
+    });
+});
+
 module.exports = router;

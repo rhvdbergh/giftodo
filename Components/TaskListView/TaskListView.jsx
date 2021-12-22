@@ -117,6 +117,24 @@ function TaskListView({
       .catch((err) => console.log('error deleting:', err));
   };
 
+  const handleComplete = (id) => {
+    // delete this specific id
+    fetch(`http://${LOCALHOST_IP}:5000/api/task/complete/${id}`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        // refresh the list
+        fetch(`http://${LOCALHOST_IP}:5000/api/task`)
+          .then((response) => response.json())
+          .then((data) => {
+            setTaskList(data);
+            setShowMore(false);
+          })
+          .catch((err) => console.log('Error in fetch: ', err));
+      })
+      .catch((err) => console.log('error deleting:', err));
+  };
+
   return (
     <>
       <FlatList
@@ -200,7 +218,7 @@ function TaskListView({
                 type: 'font-awesome-5',
                 color: 'white',
               }}
-              onPress={() => setShowMore(false)}
+              onPress={() => handleComplete(currentTask.id)}
               buttonStyle={styles.modalButton}
             />
 
