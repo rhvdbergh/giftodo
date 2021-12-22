@@ -14,6 +14,7 @@ import {
   Image,
   Overlay,
   colors,
+  Divider,
 } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
@@ -40,15 +41,21 @@ function TaskListView({
           view === 'overdue')) && (
         <TouchableWithoutFeedback
           onPress={() => {
-            console.log('you pressed it. item:', item);
             setCurrentTask(item);
             setShowMore(true);
           }}
         >
-          <View style={{ width: '100%' }}>
+          <View
+            style={{
+              width: '100%',
+            }}
+          >
             <ListItem style={{ width: '100%' }}>
               <ListItem.Content
-                style={{ display: 'flex', justifyContent: 'center' }}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
               >
                 {/* In task view, show text, else gifs */}
                 {view === 'task' || view === 'overdue' ? (
@@ -56,28 +63,42 @@ function TaskListView({
                     <ListItem.Title
                       style={{
                         ...styles.centeredTitle,
-                        color:
-                          today > new Date(item.due_date)
-                            ? colors.error
-                            : 'black',
+                        color: item.complete
+                          ? colors.grey4
+                          : item.due_date !== null &&
+                            (today > new Date(item.due_date)
+                              ? colors.error
+                              : 'black'),
                       }}
                     >
                       {item.name}
                     </ListItem.Title>
 
-                    <ListItem.Subtitle>
+                    <ListItem.Subtitle
+                      style={{
+                        marginBottom: 10,
+                        color: item.complete ? colors.grey4 : 'black',
+                      }}
+                    >
                       Priority: {item.priority}
                     </ListItem.Subtitle>
                     <ListItem.Subtitle
                       style={{
-                        color:
-                          today > new Date(item.due_date)
-                            ? colors.error
-                            : 'black',
+                        color: item.complete
+                          ? colors.grey4
+                          : item.due_date !== null &&
+                            (today > new Date(item.due_date)
+                              ? colors.error
+                              : 'black'),
                       }}
                     >
                       {item.due_date !== null &&
+                        !item.complete &&
                         `Due: ${new Date(item.due_date).toLocaleDateString()}`}
+                      {item.complete &&
+                        `Completed on: ${new Date(
+                          item.completed_on
+                        ).toLocaleDateString()}`}
                     </ListItem.Subtitle>
                   </>
                 ) : (
@@ -94,6 +115,7 @@ function TaskListView({
                 )}
               </ListItem.Content>
             </ListItem>
+            <Divider />
           </View>
         </TouchableWithoutFeedback>
       )
@@ -117,6 +139,24 @@ function TaskListView({
       .catch((err) => console.log('error deleting:', err));
   };
 
+  const handleComplete = (id) => {
+    // delete this specific id
+    fetch(`http://${LOCALHOST_IP}:5000/api/task/complete/${id}`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        // refresh the list
+        fetch(`http://${LOCALHOST_IP}:5000/api/task`)
+          .then((response) => response.json())
+          .then((data) => {
+            setTaskList(data);
+            setShowMore(false);
+          })
+          .catch((err) => console.log('Error in fetch: ', err));
+      })
+      .catch((err) => console.log('error deleting:', err));
+  };
+
   return (
     <>
       <FlatList
@@ -133,23 +173,37 @@ function TaskListView({
         fullScreen
       >
         <ScrollView>
+          {currentTask.complete && (
+            <ListItem.Title style={{ ...styles.centeredTitle, fontSize: 32 }}>
+              TASK COMPLETE!
+            </ListItem.Title>
+          )}
           <ListItem.Title style={styles.centeredTitle}>
             {currentTask.name}
           </ListItem.Title>
-          <ListItem.Subtitle>due: {currentTask.due_date}</ListItem.Subtitle>
-          <ListItem.Subtitle>
-            priority: {currentTask.priority}
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            {currentTask.complete
+              ? `Completed on: ${new Date(
+                  currentTask.completed_on
+                ).toLocaleDateString()}`
+              : `Due: ${new Date(currentTask.due_date).toLocaleDateString()}`}
           </ListItem.Subtitle>
-          <ListItem.Subtitle>createad: {currentTask.created}</ListItem.Subtitle>
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            Priority: {currentTask.priority}
+          </ListItem.Subtitle>
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            Added on: {new Date(currentTask.created).toLocaleDateString()}
+          </ListItem.Subtitle>
           {currentTask.gif_url !== null && (
             <Image
+              style={{ marginBottom: 15 }}
               source={{ uri: currentTask.gif_url }}
               containerStyle={styles.gif}
               PlaceholderContent={<ActivityIndicator />}
             />
           )}
-          <ListItem.Subtitle>
-            description: {currentTask.description}
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            Description: {currentTask.description}
           </ListItem.Subtitle>
         </ScrollView>
         <View
@@ -195,12 +249,13 @@ function TaskListView({
           <View style={{ width: '50%' }}>
             <Button
               title="Complete"
+              disabled={currentTask.complete}
               icon={{
                 name: 'check-circle',
                 type: 'font-awesome-5',
                 color: 'white',
               }}
-              onPress={() => setShowMore(false)}
+              onPress={() => handleComplete(currentTask.id)}
               buttonStyle={styles.modalButton}
             />
 
@@ -231,6 +286,11 @@ const styles = StyleSheet.create({
     padding: 25,
     marginVertical: 1,
   },
+  completedTask: {
+    backgroundColor: colors.grey5,
+    padding: 25,
+    marginVertical: 1,
+  },
   text: {
     fontSize: 24,
   },
@@ -257,6 +317,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   modalButton: {
+    backgroundColor: colors.primary,
     marginTop: 10,
     marginLeft: 15,
     marginRight: 15,
