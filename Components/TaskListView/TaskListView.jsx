@@ -29,7 +29,7 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
 
   const renderTask = ({ item }) => {
     return (
-      item.gif_url && (
+      ((item.gif_url !== null && view === 'gif') || view === 'task') && (
         <ListItem.Swipeable
           leftContent={
             <Button
@@ -66,16 +66,19 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
                 <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
               </>
             ) : (
-              <>
-                <ListItem.Title style={styles.centeredTitle}>
-                  {item.name}
-                </ListItem.Title>
-                <Image
-                  source={{ uri: item.gif_url }}
-                  containerStyle={styles.gif}
-                  PlaceholderContent={<ActivityIndicator />}
-                />
-              </>
+              view === 'gif' &&
+              item.gif_url !== null && (
+                <>
+                  <ListItem.Title style={styles.centeredTitle}>
+                    {item.name}
+                  </ListItem.Title>
+                  <Image
+                    source={{ uri: item.gif_url }}
+                    containerStyle={styles.gif}
+                    PlaceholderContent={<ActivityIndicator />}
+                  />
+                </>
+              )
             )}
           </ListItem.Content>
         </ListItem.Swipeable>
