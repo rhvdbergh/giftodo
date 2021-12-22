@@ -28,7 +28,15 @@ const emptyTask = {
   gif_url: null,
 };
 
-function AddPage({ setTabIndex, setEditTask, editTask }) {
+function AddPage({
+  setTabIndex,
+  setEditTask,
+  refreshWithSort,
+  refreshWithoutSort,
+  latestSortType,
+  sortDesc,
+  editTask,
+}) {
   // local state to control input
   const [task, setTask] = useState(editTask.id ? editTask : emptyTask);
   // the slider doesn't update correctly,
@@ -68,6 +76,8 @@ function AddPage({ setTabIndex, setEditTask, editTask }) {
           setEditTask({});
           // move the user back to the tasks screen
           setTabIndex(2);
+          // refresh the task list
+          refreshWithSort(latestSortType, sortDesc ? 'DESC' : 'ASC');
         })
         .catch((err) => console.log('Error in adding post: ', err));
     }

@@ -151,17 +151,66 @@ function TaskListView({
           <ListItem.Subtitle>
             description: {currentTask.description}
           </ListItem.Subtitle>
-          <Button
-            title="OK"
-            icon={{
-              name: 'check-circle',
-              type: 'font-awesome-5',
-              color: 'white',
-            }}
-            onPress={() => setShowMore(false)}
-            buttonStyle={{ margin: 30, backgroundColor: colors.primary }}
-          />
         </ScrollView>
+        <View
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ width: '50%' }}>
+            <Button
+              title="Delete"
+              icon={{
+                name: 'trash-alt',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+              buttonStyle={{
+                ...styles.modalButton,
+                backgroundColor: colors.error,
+              }}
+              onPress={() => handleDelete(currentTask.id)}
+            />
+            <Button
+              title="Edit"
+              icon={{
+                name: 'edit',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+              onPress={() => {
+                // set the edit task
+                setEditTask(currentTask);
+                setTabIndex(3);
+              }}
+              buttonStyle={{
+                ...styles.modalButton,
+                backgroundColor: colors.warning,
+              }}
+            />
+          </View>
+          <View style={{ width: '50%' }}>
+            <Button
+              title="Mark Complete"
+              icon={{
+                name: 'check-circle',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+              onPress={() => setShowMore(false)}
+              buttonStyle={styles.modalButton}
+            />
+
+            <Button
+              title="Back to List"
+              onPress={() => setShowMore(false)}
+              buttonStyle={styles.modalButton}
+            />
+          </View>
+        </View>
       </Overlay>
     </>
   );
@@ -202,35 +251,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginTop: 30,
   },
+  modalButton: {
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 15,
+  },
 });
-
-//  leftContent={
-//                 <Button
-//                   title="Edit"
-//                   icon={{
-//                     name: 'edit',
-//                     type: 'font-awesome-5',
-//                     color: 'white',
-//                   }}
-//                   onPress={() => {
-//                     // set the edit task
-//                     setEditTask(item);
-//                     setTabIndex(3);
-//                   }}
-//                   buttonStyle={{ minHeight: '100%' }}
-//                 />
-//               }
-//               rightContent={
-//                 <Button
-//                   title="Delete"
-//                   icon={{
-//                     name: 'trash-alt',
-//                     type: 'font-awesome-5',
-//                     color: 'white',
-//                   }}
-//                   onPress={() => handleDelete(item.id)}
-//                   buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-//                 />
-//               }
 
 export default TaskListView;

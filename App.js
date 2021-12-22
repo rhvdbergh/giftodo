@@ -34,13 +34,33 @@ export default function App() {
 
   // on app load, retrieve the taskList
   useEffect(() => {
+    refreshWithoutSort();
+  }, []);
+
+  // fetches the taskList without sort
+  const refreshWithoutSort = () => {
     fetch(`http://${LOCALHOST_IP}:5000/api/task`)
       .then((response) => response.json())
       .then((data) => {
         setTaskList(data);
       })
       .catch((err) => console.log('Error in fetch: ', err));
-  }, []);
+  };
+
+  // fetches the taskList with sort
+  const refreshWithSort = (type, sortDirection) => {
+    fetch(
+      `http://${LOCALHOST_IP}:5000/api/task?type=${type}&direction=${sortDirection}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('you ran a sort and your data is', data);
+        setTaskList(data);
+        // update the latestSortType
+        setLatestSortType(type);
+      })
+      .catch((err) => console.log('Error in fetch for sort: ', err));
+  };
 
   // handles the sort
   const handleSort = (type) => {
@@ -58,17 +78,7 @@ export default function App() {
     }
 
     // now use queries to refresh the taskList
-    fetch(
-      `http://${LOCALHOST_IP}:5000/api/task?type=${type}&direction=${sortDirection}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('you ran a sort and your data is', data);
-        setTaskList(data);
-        // update the latestSortType
-        setLatestSortType(type);
-      })
-      .catch((err) => console.log('Error in fetch for sort: ', err));
+    refreshWithSort(type, direction);
   };
 
   return (
@@ -106,6 +116,10 @@ export default function App() {
           <AddPage
             setTabIndex={setTabIndex}
             setEditTask={setEditTask}
+            refreshWithSort={refreshWithSort}
+            refreshWithoutSort={refreshWithoutSort}
+            latestSortType={latestSortType}
+            sortDesc={sortDesc}
             editTask={editTask}
           />
         )}
