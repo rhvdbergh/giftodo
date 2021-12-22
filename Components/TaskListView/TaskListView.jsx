@@ -1,25 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { Button, ListItem, Image } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
-function TaskListView({ setEditTask, setTabIndex, view }) {
-  // local state for the tasklist
-  const [taskList, setTaskList] = useState([]);
-
+function TaskListView({
+  setEditTask,
+  setTabIndex,
+  taskList,
+  setTaskList,
+  view,
+}) {
   const today = new Date();
-
-  // on page load, retrieve the taskList
-  useEffect(() => {
-    fetch(`http://${LOCALHOST_IP}:5000/api/task`)
-      .then((response) => response.json())
-      .then((data) => {
-        setTaskList(data);
-      })
-      .catch((err) => console.log('Error in fetch: ', err));
-  }, []);
 
   const renderTask = ({ item }) => {
     return (

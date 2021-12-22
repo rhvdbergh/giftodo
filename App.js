@@ -10,12 +10,14 @@ import {
   SpeedDial,
 } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { LOCALHOST_IP } from './config';
 import TaskListView from './Components/TaskListView/TaskListView';
-import GifsView from './Components/GifsView/GifsView';
-import AccountView from './Components/AccountView/AccountView';
 import AddPage from './Components/AddPage/AddPage';
 
 export default function App() {
+  // local state for the tasklist
+  const [taskList, setTaskList] = useState([]);
+
   // local state for tab index
   const [tabIndex, setTabIndex] = useState(2);
 
@@ -25,6 +27,16 @@ export default function App() {
   // keeps track of whether the speed dial is open
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
+  // on app load, retrieve the taskList
+  useEffect(() => {
+    fetch(`http://${LOCALHOST_IP}:5000/api/task`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTaskList(data);
+      })
+      .catch((err) => console.log('Error in fetch: ', err));
+  }, []);
+
   return (
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" />
@@ -33,6 +45,8 @@ export default function App() {
           <TaskListView
             setEditTask={setEditTask}
             setTabIndex={setTabIndex}
+            taskList={taskList}
+            setTaskList={setTaskList}
             view={'overdue'}
           />
         )}
@@ -40,6 +54,8 @@ export default function App() {
           <TaskListView
             setEditTask={setEditTask}
             setTabIndex={setTabIndex}
+            taskList={taskList}
+            setTaskList={setTaskList}
             view={'gif'}
           />
         )}
@@ -47,6 +63,8 @@ export default function App() {
           <TaskListView
             setEditTask={setEditTask}
             setTabIndex={setTabIndex}
+            taskList={taskList}
+            setTaskList={setTaskList}
             view={'task'}
           />
         )}
