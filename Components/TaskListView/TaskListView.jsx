@@ -1,11 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
-import { Button, ListItem } from 'react-native-elements';
+import {
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import { Button, ListItem, Image } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
-function TaskListView({ setEditTask, setTabIndex }) {
+function TaskListView({ setEditTask, setTabIndex, view }) {
   // local state for the tasklist
   const [taskList, setTaskList] = useState([]);
   const [loaded, setLoaded] = useState(0); // forces the Flatlist to update
@@ -21,41 +27,59 @@ function TaskListView({ setEditTask, setTabIndex }) {
       .catch((err) => console.log('Error in fetch: ', err));
   }, []);
 
-  const Task = ({ name }) => (
-    <View style={styles.task}>
-      <Text style={styles.text}>{name}</Text>
-    </View>
-  );
-
   const renderTask = ({ item }) => {
     return (
-      <ListItem.Swipeable
-        leftContent={
-          <Button
-            title="Edit"
-            icon={{ name: 'edit', type: 'font-awesome-5', color: 'white' }}
-            onPress={() => {
-              // set the edit task
-              setEditTask(item);
-              setTabIndex(3);
-            }}
-            buttonStyle={{ minHeight: '100%' }}
-          />
-        }
-        rightContent={
-          <Button
-            title="Delete"
-            icon={{ name: 'trash-alt', type: 'font-awesome-5', color: 'white' }}
-            onPress={() => handleDelete(item.id)}
-            buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-          />
-        }
-      >
-        <ListItem.Content>
-          <ListItem.Title>{item.name}</ListItem.Title>
-          <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
-        </ListItem.Content>
-      </ListItem.Swipeable>
+      item.gif_url && (
+        <ListItem.Swipeable
+          leftContent={
+            <Button
+              title="Edit"
+              icon={{ name: 'edit', type: 'font-awesome-5', color: 'white' }}
+              onPress={() => {
+                // set the edit task
+                setEditTask(item);
+                setTabIndex(3);
+              }}
+              buttonStyle={{ minHeight: '100%' }}
+            />
+          }
+          rightContent={
+            <Button
+              title="Delete"
+              icon={{
+                name: 'trash-alt',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+              onPress={() => handleDelete(item.id)}
+              buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+            />
+          }
+        >
+          <ListItem.Content
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            {/* In task view, show text, else gifs */}
+            {view === 'task' ? (
+              <>
+                <ListItem.Title>{item.name}</ListItem.Title>
+                <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
+              </>
+            ) : (
+              <>
+                <ListItem.Title style={styles.centeredTitle}>
+                  {item.name}
+                </ListItem.Title>
+                <Image
+                  source={{ uri: item.gif_url }}
+                  containerStyle={styles.gif}
+                  PlaceholderContent={<ActivityIndicator />}
+                />
+              </>
+            )}
+          </ListItem.Content>
+        </ListItem.Swipeable>
+      )
     );
   };
 
@@ -102,6 +126,25 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+  },
+  gif: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '90%',
+    marginLeft: '5%',
+    marginRight: '5%',
+    aspectRatio: 3 / 2,
+  },
+  gifContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  centeredTitle: {
+    textAlign: 'center',
+    width: '100%',
+    fontSize: 24,
+    marginBottom: 15,
+    marginTop: 30,
   },
 });
 
