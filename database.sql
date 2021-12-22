@@ -7,6 +7,7 @@ CREATE TABLE "task" (
 	"description" TEXT,
   "priority" INTEGER DEFAULT 5,
 	"complete" BOOLEAN NOT NULL DEFAULT false,
+  "completed_on" TIMESTAMP,
 	"created" TIMESTAMP DEFAULT NOW(),
 	"due_date" TIMESTAMP,
 	"gif_url" VARCHAR(1000)

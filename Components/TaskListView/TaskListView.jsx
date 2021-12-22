@@ -1,27 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { Button, ListItem, Image } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
-function TaskListView({ setEditTask, setTabIndex, view }) {
-  // local state for the tasklist
-  const [taskList, setTaskList] = useState([]);
-  const [loaded, setLoaded] = useState(0); // forces the Flatlist to update
-
+function TaskListView({
+  setEditTask,
+  setTabIndex,
+  taskList,
+  setTaskList,
+  view,
+}) {
   const today = new Date();
-
-  // on page load, retrieve the taskList
-  useEffect(() => {
-    fetch(`http://${LOCALHOST_IP}:5000/api/task`)
-      .then((response) => response.json())
-      .then((data) => {
-        setTaskList(data);
-        setLoaded(loaded + 1);
-      })
-      .catch((err) => console.log('Error in fetch: ', err));
-  }, []);
 
   const renderTask = ({ item }) => {
     return (
@@ -63,7 +53,12 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
             {view === 'task' || view === 'overdue' ? (
               <>
                 <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
+                <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
+                <ListItem.Subtitle>priority: {item.priority}</ListItem.Subtitle>
+                <ListItem.Subtitle>createad: {item.created}</ListItem.Subtitle>
+                <ListItem.Subtitle>
+                  description: {item.description}
+                </ListItem.Subtitle>
               </>
             ) : (
               <>
@@ -87,16 +82,17 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
     // delete this specific id
     fetch(`http://${LOCALHOST_IP}:5000/api/task/${id}`, {
       method: 'DELETE',
-    }).catch((err) => console.log('error deleting:', err));
-
-    // refresh the list
-    fetch(`http://${LOCALHOST_IP}:5000/api/task`)
-      .then((response) => response.json())
-      .then((data) => {
-        setTaskList(data);
-        setLoaded(loaded + 1);
+    })
+      .then(() => {
+        // refresh the list
+        fetch(`http://${LOCALHOST_IP}:5000/api/task`)
+          .then((response) => response.json())
+          .then((data) => {
+            setTaskList(data);
+          })
+          .catch((err) => console.log('Error in fetch: ', err));
       })
-      .catch((err) => console.log('Error in fetch: ', err));
+      .catch((err) => console.log('error deleting:', err));
   };
 
   return (
@@ -104,7 +100,7 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
       data={taskList}
       renderItem={renderTask}
       keyExtractor={(task) => task.id}
-      extraData={loaded}
+      extraData={taskList}
       ListHeaderComponent={<TaskListHeader view={view} />}
       stickyHeaderIndices={[0]}
     />
