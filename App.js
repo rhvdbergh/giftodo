@@ -52,7 +52,7 @@ export default function App() {
       setSortDesc(!sortDesc);
     } else {
       // use the normal sortDirection
-      sortDirection = 'asc';
+      sortDirection = 'desc';
       // and return sortDesc to true
       setSortDesc(true);
     }

@@ -41,10 +41,6 @@ router.get('/', (req, res) => {
         break;
     }
     direction = req.query.direction === 'asc' ? 'ASC' : 'DESC';
-    // but if we're searching on priority, this should be reversed
-    if (type === 'priority') {
-      direction === 'ASC' ? (direction = 'DESC') : (direction = 'ASC');
-    }
 
     // build a SQL query
     query = `
