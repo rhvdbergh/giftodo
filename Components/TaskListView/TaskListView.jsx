@@ -6,8 +6,15 @@ import {
   ActivityIndicator,
   TouchableWithoutFeedback,
   View,
+  ScrollView,
 } from 'react-native';
-import { Button, ListItem, Image, Overlay } from 'react-native-elements';
+import {
+  Button,
+  ListItem,
+  Image,
+  Overlay,
+  colors,
+} from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
@@ -22,6 +29,7 @@ function TaskListView({
 
   // local state to keep track of modal
   const [showMore, setShowMore] = useState(false);
+  const [currentTask, setCurrentTask] = useState({});
 
   const renderTask = ({ item }) => {
     return (
@@ -31,8 +39,9 @@ function TaskListView({
           today > new Date(item.due_date) &&
           view === 'overdue')) && (
         <TouchableWithoutFeedback
-          onPress={() => {
+          onLongPress={() => {
             console.log('you pressed it. item:', item);
+            setCurrentTask(item);
             setShowMore(true);
           }}
         >
@@ -99,18 +108,6 @@ function TaskListView({
                 )}
               </ListItem.Content>
             </ListItem.Swipeable>
-            <Overlay
-              isVisible={showMore}
-              onBackdropPress={() => setShowMore(!showMore)}
-            >
-              <ListItem.Title>{item.name}</ListItem.Title>
-              <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
-              <ListItem.Subtitle>priority: {item.priority}</ListItem.Subtitle>
-              <ListItem.Subtitle>createad: {item.created}</ListItem.Subtitle>
-              <ListItem.Subtitle>
-                description: {item.description}
-              </ListItem.Subtitle>
-            </Overlay>
           </View>
         </TouchableWithoutFeedback>
       )
@@ -135,14 +132,51 @@ function TaskListView({
   };
 
   return (
-    <FlatList
-      data={taskList}
-      renderItem={renderTask}
-      keyExtractor={(task) => task.id}
-      extraData={taskList}
-      ListHeaderComponent={<TaskListHeader view={view} />}
-      stickyHeaderIndices={[0]}
-    />
+    <>
+      <FlatList
+        data={taskList}
+        renderItem={renderTask}
+        keyExtractor={(task) => task.id}
+        extraData={taskList}
+        ListHeaderComponent={<TaskListHeader view={view} />}
+        stickyHeaderIndices={[0]}
+      />
+      <Overlay
+        isVisible={showMore}
+        onBackdropPress={() => setShowMore(!showMore)}
+      >
+        <ScrollView>
+          <ListItem.Title style={styles.centeredTitle}>
+            {currentTask.name}
+          </ListItem.Title>
+          <ListItem.Subtitle>due: {currentTask.due_date}</ListItem.Subtitle>
+          <ListItem.Subtitle>
+            priority: {currentTask.priority}
+          </ListItem.Subtitle>
+          <ListItem.Subtitle>createad: {currentTask.created}</ListItem.Subtitle>
+          {currentTask.gif_url !== null && (
+            <Image
+              source={{ uri: currentTask.gif_url }}
+              containerStyle={styles.gif}
+              PlaceholderContent={<ActivityIndicator />}
+            />
+          )}
+          <ListItem.Subtitle>
+            description: {currentTask.description}
+          </ListItem.Subtitle>
+          <Button
+            title="OK"
+            icon={{
+              name: 'check-circle',
+              type: 'font-awesome-5',
+              color: 'white',
+            }}
+            onPress={() => setShowMore(false)}
+            buttonStyle={{ margin: 30, backgroundColor: colors.primary }}
+          />
+        </ScrollView>
+      </Overlay>
+    </>
   );
 }
 
