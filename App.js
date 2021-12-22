@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import {
   ThemeProvider,
   TabView,
@@ -23,6 +23,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.container}>
         {tabIndex === 0 && (
           <TaskListView
