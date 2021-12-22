@@ -68,7 +68,14 @@ function TaskListView({
                     <ListItem.Subtitle>
                       Priority: {item.priority}
                     </ListItem.Subtitle>
-                    <ListItem.Subtitle>
+                    <ListItem.Subtitle
+                      style={{
+                        color:
+                          today > new Date(item.due_date)
+                            ? colors.error
+                            : 'black',
+                      }}
+                    >
                       {item.due_date !== null &&
                         `Due: ${new Date(item.due_date).toLocaleDateString()}`}
                     </ListItem.Subtitle>
