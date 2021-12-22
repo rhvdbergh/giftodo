@@ -27,6 +27,11 @@ export default function App() {
   // keeps track of whether the speed dial is open
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
+  // keeps track of sort position
+  // default is ascending sort
+  const [sortDesc, setSortDesc] = useState(false);
+  const [latestSortType, setLatestSortType] = useState('');
+
   // on app load, retrieve the taskList
   useEffect(() => {
     fetch(`http://${LOCALHOST_IP}:5000/api/task`)
@@ -36,6 +41,37 @@ export default function App() {
       })
       .catch((err) => console.log('Error in fetch: ', err));
   }, []);
+
+  // handles the sort
+  const handleSort = (type) => {
+    // variable to determine sort direction
+    let sortDirection;
+    if (latestSortType === type) {
+      // change the sort direction and toggle
+      sortDirection = sortDesc ? 'asc' : 'desc';
+      setSortDesc(!sortDesc);
+    } else {
+      // use the normal sortDirection
+      sortDirection = 'asc';
+      // and return sortDesc to false
+      setSortDesc(false);
+    }
+
+    // now use queries to refresh the taskList
+    fetch(
+      `http://${LOCALHOST_IP}:5000/api/task?type=${type}&direction=${sortDirection}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('you ran a sort and your data is', data);
+        setTaskList(data);
+        // update the latestSortType
+        setLatestSortType(type);
+        // close the speedDial
+        setOpenSpeedDial(false);
+      })
+      .catch((err) => console.log('Error in fetch for sort: ', err));
+  };
 
   return (
     <SafeAreaProvider>
@@ -92,7 +128,6 @@ export default function App() {
             title="Due"
             titleStyle={{ fontSize: 12 }}
             icon={{ name: 'clock', type: 'font-awesome-5', color: 'white' }}
-            onChange={() => console.log('hi')}
           />
           <Tab.Item
             title="Gifs"
@@ -138,24 +173,39 @@ export default function App() {
             onClose={() => setOpenSpeedDial(!openSpeedDial)}
           >
             <SpeedDial.Action
-              icon={{ name: 'add', color: '#fff' }}
+              icon={{
+                name: 'exclamation',
+                type: 'font-awesome-5',
+                color: '#fff',
+              }}
               title="Priority"
-              onPress={() => console.log('Add Something')}
+              onPress={() => handleSort('priority')}
             />
             <SpeedDial.Action
-              icon={{ name: 'add', color: '#fff' }}
+              icon={{
+                name: 'calendar-alt',
+                type: 'font-awesome-5',
+                color: '#fff',
+              }}
               title="Date Added"
-              onPress={() => console.log('Add Something')}
+              onPress={() => handleSort('created')}
             />
             <SpeedDial.Action
-              icon={{ name: 'add', color: '#fff' }}
+              icon={{ name: 'clock', type: 'font-awesome-5', color: '#fff' }}
               title="Due Date"
-              onPress={() => console.log('Add Something')}
+              onPress={() => handleSort('due_date')}
             />
             <SpeedDial.Action
-              icon={{ name: 'add', color: '#fff' }}
+              icon={{
+                name:
+                  latestSortType === 'name' && sortDesc
+                    ? 'sort-alpha-up'
+                    : 'sort-alpha-down',
+                type: 'font-awesome-5',
+                color: '#fff',
+              }}
               title="Name"
-              onPress={() => console.log('Add Something')}
+              onPress={() => handleSort('name')}
             />
           </SpeedDial>
         )}
