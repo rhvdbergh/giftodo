@@ -1,12 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import {
-  FlatList,
-  Text,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
+import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { Button, ListItem, Image } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
@@ -15,6 +9,8 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
   // local state for the tasklist
   const [taskList, setTaskList] = useState([]);
   const [loaded, setLoaded] = useState(0); // forces the Flatlist to update
+
+  const today = new Date();
 
   // on page load, retrieve the taskList
   useEffect(() => {
@@ -29,7 +25,11 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
 
   const renderTask = ({ item }) => {
     return (
-      ((item.gif_url !== null && view === 'gif') || view === 'task') && (
+      ((item.gif_url !== null && view === 'gif') ||
+        view === 'task' ||
+        (item.due_date !== null &&
+          today > new Date(item.due_date) &&
+          view === 'overdue')) && (
         <ListItem.Swipeable
           leftContent={
             <Button
@@ -60,25 +60,22 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
             style={{ display: 'flex', justifyContent: 'center' }}
           >
             {/* In task view, show text, else gifs */}
-            {view === 'task' ? (
+            {view === 'task' || view === 'overdue' ? (
               <>
                 <ListItem.Title>{item.name}</ListItem.Title>
                 <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
               </>
             ) : (
-              view === 'gif' &&
-              item.gif_url !== null && (
-                <>
-                  <ListItem.Title style={styles.centeredTitle}>
-                    {item.name}
-                  </ListItem.Title>
-                  <Image
-                    source={{ uri: item.gif_url }}
-                    containerStyle={styles.gif}
-                    PlaceholderContent={<ActivityIndicator />}
-                  />
-                </>
-              )
+              <>
+                <ListItem.Title style={styles.centeredTitle}>
+                  {item.name}
+                </ListItem.Title>
+                <Image
+                  source={{ uri: item.gif_url }}
+                  containerStyle={styles.gif}
+                  PlaceholderContent={<ActivityIndicator />}
+                />
+              </>
             )}
           </ListItem.Content>
         </ListItem.Swipeable>
