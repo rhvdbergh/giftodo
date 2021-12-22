@@ -41,6 +41,10 @@ router.get('/', (req, res) => {
         break;
     }
     direction = req.query.direction === 'asc' ? 'ASC' : 'DESC';
+    // we want sorting by due date to be opposite than expected, so:
+    if (type === 'due_date') {
+      direction = direction === 'ASC' ? 'DESC' : 'ASC';
+    }
 
     // build a SQL query
     query = `

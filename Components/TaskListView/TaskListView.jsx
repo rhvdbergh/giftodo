@@ -1,6 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { Button, ListItem, Image } from 'react-native-elements';
+import { useState } from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+  View,
+  ScrollView,
+} from 'react-native';
+import {
+  Button,
+  ListItem,
+  Image,
+  Overlay,
+  colors,
+} from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
@@ -13,6 +27,10 @@ function TaskListView({
 }) {
   const today = new Date();
 
+  // local state to keep track of modal
+  const [showMore, setShowMore] = useState(false);
+  const [currentTask, setCurrentTask] = useState({});
+
   const renderTask = ({ item }) => {
     return (
       ((item.gif_url !== null && view === 'gif') ||
@@ -20,60 +38,64 @@ function TaskListView({
         (item.due_date !== null &&
           today > new Date(item.due_date) &&
           view === 'overdue')) && (
-        <ListItem.Swipeable
-          leftContent={
-            <Button
-              title="Edit"
-              icon={{ name: 'edit', type: 'font-awesome-5', color: 'white' }}
-              onPress={() => {
-                // set the edit task
-                setEditTask(item);
-                setTabIndex(3);
-              }}
-              buttonStyle={{ minHeight: '100%' }}
-            />
-          }
-          rightContent={
-            <Button
-              title="Delete"
-              icon={{
-                name: 'trash-alt',
-                type: 'font-awesome-5',
-                color: 'white',
-              }}
-              onPress={() => handleDelete(item.id)}
-              buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-            />
-          }
+        <TouchableWithoutFeedback
+          onPress={() => {
+            console.log('you pressed it. item:', item);
+            setCurrentTask(item);
+            setShowMore(true);
+          }}
         >
-          <ListItem.Content
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            {/* In task view, show text, else gifs */}
-            {view === 'task' || view === 'overdue' ? (
-              <>
-                <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>due: {item.due_date}</ListItem.Subtitle>
-                <ListItem.Subtitle>priority: {item.priority}</ListItem.Subtitle>
-                <ListItem.Subtitle>createad: {item.created}</ListItem.Subtitle>
-                <ListItem.Subtitle>
-                  description: {item.description}
-                </ListItem.Subtitle>
-              </>
-            ) : (
-              <>
-                <ListItem.Title style={styles.centeredTitle}>
-                  {item.name}
-                </ListItem.Title>
-                <Image
-                  source={{ uri: item.gif_url }}
-                  containerStyle={styles.gif}
-                  PlaceholderContent={<ActivityIndicator />}
-                />
-              </>
-            )}
-          </ListItem.Content>
-        </ListItem.Swipeable>
+          <View style={{ width: '100%' }}>
+            <ListItem style={{ width: '100%' }}>
+              <ListItem.Content
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                {/* In task view, show text, else gifs */}
+                {view === 'task' || view === 'overdue' ? (
+                  <>
+                    <ListItem.Title
+                      style={{
+                        ...styles.centeredTitle,
+                        color:
+                          today > new Date(item.due_date)
+                            ? colors.error
+                            : 'black',
+                      }}
+                    >
+                      {item.name}
+                    </ListItem.Title>
+
+                    <ListItem.Subtitle>
+                      Priority: {item.priority}
+                    </ListItem.Subtitle>
+                    <ListItem.Subtitle
+                      style={{
+                        color:
+                          today > new Date(item.due_date)
+                            ? colors.error
+                            : 'black',
+                      }}
+                    >
+                      {item.due_date !== null &&
+                        `Due: ${new Date(item.due_date).toLocaleDateString()}`}
+                    </ListItem.Subtitle>
+                  </>
+                ) : (
+                  <>
+                    <ListItem.Title style={styles.centeredTitle}>
+                      {item.name}
+                    </ListItem.Title>
+                    <Image
+                      source={{ uri: item.gif_url }}
+                      containerStyle={styles.gif}
+                      PlaceholderContent={<ActivityIndicator />}
+                    />
+                  </>
+                )}
+              </ListItem.Content>
+            </ListItem>
+          </View>
+        </TouchableWithoutFeedback>
       )
     );
   };
@@ -96,14 +118,101 @@ function TaskListView({
   };
 
   return (
-    <FlatList
-      data={taskList}
-      renderItem={renderTask}
-      keyExtractor={(task) => task.id}
-      extraData={taskList}
-      ListHeaderComponent={<TaskListHeader view={view} />}
-      stickyHeaderIndices={[0]}
-    />
+    <>
+      <FlatList
+        data={taskList}
+        renderItem={renderTask}
+        keyExtractor={(task) => task.id}
+        extraData={taskList}
+        ListHeaderComponent={<TaskListHeader view={view} />}
+        stickyHeaderIndices={[0]}
+      />
+      <Overlay
+        isVisible={showMore}
+        onBackdropPress={() => setShowMore(!showMore)}
+        fullScreen
+      >
+        <ScrollView>
+          <ListItem.Title style={styles.centeredTitle}>
+            {currentTask.name}
+          </ListItem.Title>
+          <ListItem.Subtitle>due: {currentTask.due_date}</ListItem.Subtitle>
+          <ListItem.Subtitle>
+            priority: {currentTask.priority}
+          </ListItem.Subtitle>
+          <ListItem.Subtitle>createad: {currentTask.created}</ListItem.Subtitle>
+          {currentTask.gif_url !== null && (
+            <Image
+              source={{ uri: currentTask.gif_url }}
+              containerStyle={styles.gif}
+              PlaceholderContent={<ActivityIndicator />}
+            />
+          )}
+          <ListItem.Subtitle>
+            description: {currentTask.description}
+          </ListItem.Subtitle>
+        </ScrollView>
+        <View
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ width: '50%' }}>
+            <Button
+              title="Delete"
+              icon={{
+                name: 'trash-alt',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+              buttonStyle={{
+                ...styles.modalButton,
+                backgroundColor: colors.error,
+              }}
+              onPress={() => handleDelete(currentTask.id)}
+            />
+            <Button
+              title="Edit"
+              icon={{
+                name: 'edit',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+              onPress={() => {
+                // set the edit task
+                setEditTask(currentTask);
+                setTabIndex(3);
+              }}
+              buttonStyle={{
+                ...styles.modalButton,
+                backgroundColor: colors.warning,
+              }}
+            />
+          </View>
+          <View style={{ width: '50%' }}>
+            <Button
+              title="Mark Complete"
+              icon={{
+                name: 'check-circle',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
+              onPress={() => setShowMore(false)}
+              buttonStyle={styles.modalButton}
+            />
+
+            <Button
+              title="Back to List"
+              onPress={() => setShowMore(false)}
+              buttonStyle={styles.modalButton}
+            />
+          </View>
+        </View>
+      </Overlay>
+    </>
   );
 }
 
@@ -141,6 +250,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 15,
     marginTop: 30,
+  },
+  modalButton: {
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 15,
   },
 });
 
