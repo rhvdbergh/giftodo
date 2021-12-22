@@ -41,7 +41,6 @@ function TaskListView({
           view === 'overdue')) && (
         <TouchableWithoutFeedback
           onPress={() => {
-            console.log('you pressed it. item:', item);
             setCurrentTask(item);
             setShowMore(true);
           }}
@@ -77,6 +76,7 @@ function TaskListView({
 
                     <ListItem.Subtitle
                       style={{
+                        marginBottom: 10,
                         color: item.complete ? colors.grey4 : 'black',
                       }}
                     >
@@ -173,23 +173,37 @@ function TaskListView({
         fullScreen
       >
         <ScrollView>
+          {currentTask.complete && (
+            <ListItem.Title style={{ ...styles.centeredTitle, fontSize: 32 }}>
+              TASK COMPLETE!
+            </ListItem.Title>
+          )}
           <ListItem.Title style={styles.centeredTitle}>
             {currentTask.name}
           </ListItem.Title>
-          <ListItem.Subtitle>due: {currentTask.due_date}</ListItem.Subtitle>
-          <ListItem.Subtitle>
-            priority: {currentTask.priority}
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            {currentTask.complete
+              ? `Completed on: ${new Date(
+                  currentTask.completed_on
+                ).toLocaleDateString()}`
+              : `Due: ${new Date(currentTask.due_date).toLocaleDateString()}`}
           </ListItem.Subtitle>
-          <ListItem.Subtitle>createad: {currentTask.created}</ListItem.Subtitle>
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            Priority: {currentTask.priority}
+          </ListItem.Subtitle>
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            Added on: {new Date(currentTask.created).toLocaleDateString()}
+          </ListItem.Subtitle>
           {currentTask.gif_url !== null && (
             <Image
+              style={{ marginBottom: 15 }}
               source={{ uri: currentTask.gif_url }}
               containerStyle={styles.gif}
               PlaceholderContent={<ActivityIndicator />}
             />
           )}
-          <ListItem.Subtitle>
-            description: {currentTask.description}
+          <ListItem.Subtitle style={{ marginBottom: 15 }}>
+            Description: {currentTask.description}
           </ListItem.Subtitle>
         </ScrollView>
         <View
@@ -235,6 +249,7 @@ function TaskListView({
           <View style={{ width: '50%' }}>
             <Button
               title="Complete"
+              disabled={currentTask.complete}
               icon={{
                 name: 'check-circle',
                 type: 'font-awesome-5',
