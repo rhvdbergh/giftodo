@@ -194,7 +194,7 @@ function TaskListView({
           </View>
           <View style={{ width: '50%' }}>
             <Button
-              title="Mark Complete"
+              title="Complete"
               icon={{
                 name: 'check-circle',
                 type: 'font-awesome-5',
@@ -206,6 +206,11 @@ function TaskListView({
 
             <Button
               title="Back to List"
+              icon={{
+                name: 'undo',
+                type: 'font-awesome-5',
+                color: 'white',
+              }}
               onPress={() => setShowMore(false)}
               buttonStyle={styles.modalButton}
             />
