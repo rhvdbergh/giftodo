@@ -67,7 +67,9 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
               </>
             ) : (
               <>
-                <ListItem.Title>{item.name}</ListItem.Title>
+                <ListItem.Title style={styles.centeredTitle}>
+                  {item.name}
+                </ListItem.Title>
                 <Image
                   source={{ uri: item.gif_url }}
                   containerStyle={styles.gif}
@@ -136,6 +138,13 @@ const styles = StyleSheet.create({
   gifContainer: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  centeredTitle: {
+    textAlign: 'center',
+    width: '100%',
+    fontSize: 24,
+    marginBottom: 15,
+    marginTop: 30,
   },
 });
 
