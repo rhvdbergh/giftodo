@@ -1,12 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import {
-  FlatList,
-  Text,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
+import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { Button, ListItem, Image } from 'react-native-elements';
 import { LOCALHOST_IP } from '../../config';
 import TaskListHeader from '../TaskListHeader/TaskListHeader';
@@ -65,7 +59,7 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
                 <ListItem.Title>{item.name}</ListItem.Title>
                 <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
               </>
-            ) : (
+            ) : view === 'gif' ? (
               <>
                 <ListItem.Title style={styles.centeredTitle}>
                   {item.name}
@@ -75,6 +69,11 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
                   containerStyle={styles.gif}
                   PlaceholderContent={<ActivityIndicator />}
                 />
+              </>
+            ) : (
+              <>
+                <ListItem.Title>{item.name}</ListItem.Title>
+                <ListItem.Subtitle>{item.due_date}</ListItem.Subtitle>
               </>
             )}
           </ListItem.Content>

@@ -24,7 +24,13 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        {tabIndex === 0 && <AccountView />}
+        {tabIndex === 0 && (
+          <TaskListView
+            setEditTask={setEditTask}
+            setTabIndex={setTabIndex}
+            view={'overdue'}
+          />
+        )}
         {tabIndex === 1 && (
           <TaskListView
             setEditTask={setEditTask}
