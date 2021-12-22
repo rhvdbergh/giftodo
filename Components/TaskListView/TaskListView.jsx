@@ -105,7 +105,7 @@ function TaskListView({ setEditTask, setTabIndex, view }) {
       renderItem={renderTask}
       keyExtractor={(task) => task.id}
       extraData={loaded}
-      ListHeaderComponent={TaskListHeader}
+      ListHeaderComponent={<TaskListHeader view={view} />}
       stickyHeaderIndices={[0]}
     />
   );

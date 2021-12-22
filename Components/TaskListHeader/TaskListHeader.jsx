@@ -1,10 +1,20 @@
 import { Text, StyleSheet, View } from 'react-native';
 import { colors } from 'react-native-elements';
 
-function TaskListHeader() {
+function TaskListHeader({ view }) {
   return (
     <View style={styles.header}>
-      <Text style={styles.text}>My Tasks</Text>
+      <Text style={styles.text}>
+        {view === 'task'
+          ? 'My Tasks'
+          : view === 'gif'
+          ? 'Task Gifs'
+          : view === 'edit'
+          ? 'Edit'
+          : view === 'add'
+          ? 'Add'
+          : 'Overdue'}
+      </Text>
     </View>
   );
 }

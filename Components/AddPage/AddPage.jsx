@@ -17,6 +17,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { LOCALHOST_IP, GIPHY_API } from '../../config';
 import axios from 'axios';
+import TaskListHeader from '../TaskListHeader/TaskListHeader';
 
 // set up an empty task object to start with
 const emptyTask = {
@@ -87,6 +88,7 @@ function AddPage({ setTabIndex, setEditTask, editTask }) {
 
   return (
     <ScrollView style={styles.container}>
+      <TaskListHeader view={editTask.id ? 'edit' : 'add'} />
       <Text style={styles.text}>Task Name</Text>
       <TextInput
         style={styles.input}
