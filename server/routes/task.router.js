@@ -47,9 +47,17 @@ router.get('/', (req, res) => {
     }
 
     // build a SQL query
-    query = `
+    // if the type is name, search on lowercase
+    if (type === 'name') {
+      query = `
       SELECT * FROM "task" ORDER BY completed_on ASC NULLS FIRST, LOWER(${type}) ${direction};
     `;
+    } else {
+      // the search doesn't touch letters, it's only dates or numbers
+      query = `
+      SELECT * FROM "task" ORDER BY completed_on ASC NULLS FIRST,${type} ${direction};
+    `;
+    }
 
     console.log('search query:', query);
   }
