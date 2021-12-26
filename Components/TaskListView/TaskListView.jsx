@@ -133,6 +133,8 @@ function TaskListView({
           .then((response) => response.json())
           .then((data) => {
             setTaskList(data);
+            // close the modal
+            setShowMore(false);
           })
           .catch((err) => console.log('Error in fetch: ', err));
       })
