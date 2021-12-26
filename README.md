@@ -16,8 +16,11 @@ The app uses a [PostgreSQL](https://www.postgresql.org/) database to on the back
 
 ## Screenshots
 
-![media/login.png](media/login.png)
-_Login._
+![/assets/task_list.png](/assets/task_list.png)
+_Task List_
+
+![/assets/gif_list_sort.png](/assets/gif_list_sort.png)
+_Tasks in Gif view with sort speed dial._
 
 ## Installation
 
